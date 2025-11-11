@@ -8,6 +8,7 @@ This repository contains configuration files for:
 - **Zsh**: Shell configuration and aliases (with oh-my-zsh support)
 - **Git**: Version control settings
 - **SSH**: Client configuration
+- **asdf**: Version manager configuration
 - **Claude**: Claude Code settings and custom slash commands
 
 ## Directory Structure
@@ -25,6 +26,9 @@ This repository contains configuration files for:
 │   └── .gitconfig
 ├── ssh/                    # SSH configuration
 │   └── config
+├── asdf/                   # asdf version manager
+│   ├── .tool-versions      # Global tool versions
+│   └── .asdfrc             # asdf configuration
 ├── claude/                 # Claude Code configuration
 │   ├── CLAUDE.md
 │   ├── settings.json
@@ -43,6 +47,11 @@ This repository contains configuration files for:
 - **Oh-my-zsh**: Required for Zsh enhancements
   ```bash
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  ```
+
+- **asdf**: Version manager for managing runtime versions (optional but recommended)
+  ```bash
+  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
   ```
 
 ## Installation
@@ -87,6 +96,8 @@ The installation script creates these symlinks:
 | `zsh/oh-my-zsh-custom/*.zsh`          | `~/.oh-my-zsh/custom/*.zsh`                 |
 | `git/.gitconfig`                      | `~/.gitconfig`                              |
 | `ssh/config`                          | `~/.ssh/config`                             |
+| `asdf/.tool-versions`                 | `~/.tool-versions`                          |
+| `asdf/.asdfrc`                        | `~/.asdfrc`                                 |
 | `claude/CLAUDE.md`                    | `~/.claude/CLAUDE.md`                       |
 | `claude/settings.json`                | `~/.claude/settings.json`                   |
 | `claude/commands/*.md`                | `~/.claude/commands/*.md`                   |
@@ -98,6 +109,19 @@ Current setup (from `.zshrc`):
 - **Plugins**: git, rails, ruby, python
 
 Custom themes, plugins, and scripts can be added to `zsh/oh-my-zsh-custom/`. See the [oh-my-zsh customization guide](zsh/oh-my-zsh-custom/README.md).
+
+### asdf Configuration
+
+Current setup:
+- **Global tool versions**: ruby 3.1.6
+- **Config**: `legacy_version_file = yes` (enables reading .ruby-version, .node-version, etc.)
+
+Add more tools to `.tool-versions` as needed:
+```
+ruby 3.1.6
+nodejs 20.0.0
+python 3.11.0
+```
 
 ### Claude Slash Commands
 

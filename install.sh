@@ -112,6 +112,15 @@ if [ -f "$DOTFILES_DIR/ssh/config" ]; then
     create_symlink "$DOTFILES_DIR/ssh/config" "$HOME/.ssh/config"
 fi
 
+# Install asdf configuration
+if [ -f "$DOTFILES_DIR/asdf/.tool-versions" ]; then
+    create_symlink "$DOTFILES_DIR/asdf/.tool-versions" "$HOME/.tool-versions"
+fi
+
+if [ -f "$DOTFILES_DIR/asdf/.asdfrc" ]; then
+    create_symlink "$DOTFILES_DIR/asdf/.asdfrc" "$HOME/.asdfrc"
+fi
+
 # Install Claude configuration
 if [ -d "$DOTFILES_DIR/claude" ]; then
     # Create .claude directory if it doesn't exist
