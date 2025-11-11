@@ -1,0 +1,1 @@
+- Ensure that when we create a PR that addresses a specific issue it auto-closes that issue on github

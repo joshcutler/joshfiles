@@ -1,0 +1,39 @@
+# Dotfiles .gitignore
+# Prevents sensitive files from being committed
+
+# SSH private keys (only config should be committed)
+ssh/id_*
+ssh/*.pem
+ssh/*.key
+
+# Local machine-specific overrides
+*.local
+
+# Backup files
+*.backup
+*.bak
+*~
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Sensitive data
+secrets/
+*.secret
+*.env
+
+# Claude data directories (only config files should be committed)
+claude/debug/
+claude/file-history/
+claude/history.jsonl
+claude/projects/
+claude/session-env/
+claude/shell-snapshots/
+claude/statsig/
+claude/todos/
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
