@@ -8,7 +8,7 @@ This repository contains configuration files for:
 - **Zsh**: Shell configuration and aliases
 - **Git**: Version control settings
 - **SSH**: Client configuration
-- **Claude**: Claude Code settings
+- **Claude**: Claude Code settings and custom slash commands
 
 ## Directory Structure
 
@@ -23,7 +23,12 @@ This repository contains configuration files for:
 │   └── config
 ├── claude/            # Claude Code configuration
 │   ├── CLAUDE.md
-│   └── settings.json
+│   ├── settings.json
+│   └── commands/      # Custom slash commands
+│       ├── bug.md
+│       ├── enhancement.md
+│       ├── feature.md
+│       └── implement.md
 ├── scripts/           # Custom utility scripts
 ├── install.sh         # Installation script
 └── README.md          # This file
@@ -62,14 +67,23 @@ Simply clone and run `./install.sh` - it will set up all symlinks automatically.
 
 The installation script creates these symlinks:
 
-| Source                    | Target                    |
-|---------------------------|---------------------------|
-| `zsh/.zshrc`              | `~/.zshrc`                |
-| `zsh/.zprofile`           | `~/.zprofile`             |
-| `git/.gitconfig`          | `~/.gitconfig`            |
-| `ssh/config`              | `~/.ssh/config`           |
-| `claude/CLAUDE.md`        | `~/.claude/CLAUDE.md`     |
-| `claude/settings.json`    | `~/.claude/settings.json` |
+| Source                         | Target                              |
+|--------------------------------|-------------------------------------|
+| `zsh/.zshrc`                   | `~/.zshrc`                          |
+| `zsh/.zprofile`                | `~/.zprofile`                       |
+| `git/.gitconfig`               | `~/.gitconfig`                      |
+| `ssh/config`                   | `~/.ssh/config`                     |
+| `claude/CLAUDE.md`             | `~/.claude/CLAUDE.md`               |
+| `claude/settings.json`         | `~/.claude/settings.json`           |
+| `claude/commands/*.md`         | `~/.claude/commands/*.md`           |
+
+### Claude Slash Commands
+
+The following custom commands are included:
+- `/bug` - Report and fix bugs
+- `/enhancement` - Improve existing features
+- `/feature` - Implement new features
+- `/implement` - Implement specific functionality
 
 ## Making Changes
 

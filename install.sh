@@ -96,6 +96,19 @@ if [ -d "$DOTFILES_DIR/claude" ]; then
         if [ -f "$file" ]; then
             filename=$(basename "$file")
             create_symlink "$file" "$HOME/.claude/$filename"
+        elif [ -d "$file" ]; then
+            # Handle subdirectories (like commands/)
+            dirname=$(basename "$file")
+            if [ ! -d "$HOME/.claude/$dirname" ]; then
+                mkdir -p "$HOME/.claude/$dirname"
+            fi
+            # Symlink all files in the subdirectory
+            for subfile in "$file"/*; do
+                if [ -f "$subfile" ]; then
+                    subfilename=$(basename "$subfile")
+                    create_symlink "$subfile" "$HOME/.claude/$dirname/$subfilename"
+                fi
+            done
         fi
     done
 fi
