@@ -37,3 +37,6 @@ claude/todos/
 *.tmp
 *.swp
 *.swo
+
+# Homebrew Bundle lock file (optional: remove this line if you want to commit exact versions)
+Brewfile.lock.json

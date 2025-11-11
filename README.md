@@ -29,6 +29,8 @@ This repository contains configuration files for:
 ├── asdf/                   # asdf version manager
 │   ├── .tool-versions      # Global tool versions
 │   └── .asdfrc             # asdf configuration
+├── Brewfile                # Homebrew packages (like Gemfile for system tools)
+├── bootstrap.sh            # First-run setup script
 ├── claude/                 # Claude Code configuration
 │   ├── CLAUDE.md
 │   ├── settings.json
@@ -42,46 +44,53 @@ This repository contains configuration files for:
 └── README.md               # This file
 ```
 
-## Prerequisites
-
-- **Oh-my-zsh**: Required for Zsh enhancements
-  ```bash
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-  ```
-
-- **asdf**: Version manager for managing runtime versions (optional but recommended)
-  ```bash
-  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
-  ```
-
 ## Installation
 
-### First Time Setup
+### Quick Start (Recommended for New Machines)
 
-1. Clone this repository:
-   ```bash
-   git clone <your-repo-url> ~/code/joshfiles
-   cd ~/code/joshfiles
-   ```
+The **bootstrap script** handles everything - Homebrew, packages, oh-my-zsh, asdf plugins, and dotfiles:
 
-2. Run the installation script:
-   ```bash
-   ./install.sh
-   ```
+```bash
+# Clone this repository
+git clone <your-repo-url> ~/code/joshfiles
+cd ~/code/joshfiles
 
-   The script will:
-   - Create symlinks from this repo to your home directory
-   - Backup any existing files to `~/.dotfiles_backup/`
-   - Set up all configurations
+# Run the bootstrap script
+./bootstrap.sh
+```
 
-3. Restart your shell or source the config:
-   ```bash
-   source ~/.zshrc
-   ```
+This will:
+1. Install Homebrew (if not present)
+2. Install all packages from `Brewfile` (CLI tools, apps, VSCode extensions)
+3. Install oh-my-zsh (if not present)
+4. Install asdf plugins (ruby, etc.)
+5. Symlink all dotfiles to your home directory
+6. Backup any existing files
 
-### On Additional Machines
+Then restart your terminal and install language runtimes:
+```bash
+asdf install  # Installs ruby 3.1.6 and other versions from .tool-versions
+```
 
-Simply clone and run `./install.sh` - it will set up all symlinks automatically.
+### Manual Installation (Dotfiles Only)
+
+If you already have Homebrew and other tools installed:
+
+```bash
+git clone <your-repo-url> ~/code/joshfiles
+cd ~/code/joshfiles
+./install.sh  # Just symlinks dotfiles, doesn't install packages
+```
+
+### Updating Existing Machines
+
+```bash
+cd ~/code/joshfiles
+git pull                  # Get latest dotfiles
+brew bundle               # Install any new packages from Brewfile
+```
+
+Changes to dotfiles take effect immediately (symlinks).
 
 ## What Gets Installed
 
@@ -110,6 +119,27 @@ Current setup (from `.zshrc`):
 
 Custom themes, plugins, and scripts can be added to `zsh/oh-my-zsh-custom/`. See the [oh-my-zsh customization guide](zsh/oh-my-zsh-custom/README.md).
 
+### Homebrew Package Management
+
+The `Brewfile` works like a `Gemfile` for system packages. Current setup includes:
+- **CLI tools**: asdf, gh, jq, httpie, awscli, flyctl, etc.
+- **Services**: postgresql@14, redis
+- **Apps**: claude-code
+- **VSCode extensions**: Copilot, Python, Docker, Rails, etc.
+
+**Adding new packages:**
+```bash
+brew install <package>          # Install a package
+cd ~/code/joshfiles
+brew bundle dump --force        # Update Brewfile with currently installed packages
+git add Brewfile && git commit -m "Add <package>"
+```
+
+**Installing on other machines:**
+```bash
+brew bundle                     # Install all packages from Brewfile
+```
+
 ### asdf Configuration
 
 Current setup:
@@ -121,6 +151,12 @@ Add more tools to `.tool-versions` as needed:
 ruby 3.1.6
 nodejs 20.0.0
 python 3.11.0
+```
+
+After updating, run:
+```bash
+asdf plugin add nodejs    # Add plugin if not present
+asdf install              # Install all versions from .tool-versions
 ```
 
 ### Claude Slash Commands
