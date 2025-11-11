@@ -5,7 +5,7 @@ Personal dotfiles for managing configuration across multiple development machine
 ## Overview
 
 This repository contains configuration files for:
-- **Zsh**: Shell configuration and aliases
+- **Zsh**: Shell configuration and aliases (with oh-my-zsh support)
 - **Git**: Version control settings
 - **SSH**: Client configuration
 - **Claude**: Claude Code settings and custom slash commands
@@ -14,25 +14,36 @@ This repository contains configuration files for:
 
 ```
 .
-├── zsh/               # Zsh configuration files
+├── zsh/                    # Zsh configuration files
 │   ├── .zshrc
-│   └── .zprofile
-├── git/               # Git configuration
+│   ├── .zprofile
+│   └── oh-my-zsh-custom/   # Oh-my-zsh customizations
+│       ├── themes/         # Custom themes
+│       ├── plugins/        # Custom plugins
+│       └── README.md
+├── git/                    # Git configuration
 │   └── .gitconfig
-├── ssh/               # SSH configuration
+├── ssh/                    # SSH configuration
 │   └── config
-├── claude/            # Claude Code configuration
+├── claude/                 # Claude Code configuration
 │   ├── CLAUDE.md
 │   ├── settings.json
-│   └── commands/      # Custom slash commands
+│   └── commands/           # Custom slash commands
 │       ├── bug.md
 │       ├── enhancement.md
 │       ├── feature.md
 │       └── implement.md
-├── scripts/           # Custom utility scripts
-├── install.sh         # Installation script
-└── README.md          # This file
+├── scripts/                # Custom utility scripts
+├── install.sh              # Installation script
+└── README.md               # This file
 ```
+
+## Prerequisites
+
+- **Oh-my-zsh**: Required for Zsh enhancements
+  ```bash
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  ```
 
 ## Installation
 
@@ -67,15 +78,26 @@ Simply clone and run `./install.sh` - it will set up all symlinks automatically.
 
 The installation script creates these symlinks:
 
-| Source                         | Target                              |
-|--------------------------------|-------------------------------------|
-| `zsh/.zshrc`                   | `~/.zshrc`                          |
-| `zsh/.zprofile`                | `~/.zprofile`                       |
-| `git/.gitconfig`               | `~/.gitconfig`                      |
-| `ssh/config`                   | `~/.ssh/config`                     |
-| `claude/CLAUDE.md`             | `~/.claude/CLAUDE.md`               |
-| `claude/settings.json`         | `~/.claude/settings.json`           |
-| `claude/commands/*.md`         | `~/.claude/commands/*.md`           |
+| Source                                | Target                                     |
+|---------------------------------------|---------------------------------------------|
+| `zsh/.zshrc`                          | `~/.zshrc`                                  |
+| `zsh/.zprofile`                       | `~/.zprofile`                               |
+| `zsh/oh-my-zsh-custom/themes/*`       | `~/.oh-my-zsh/custom/themes/*`              |
+| `zsh/oh-my-zsh-custom/plugins/*`      | `~/.oh-my-zsh/custom/plugins/*`             |
+| `zsh/oh-my-zsh-custom/*.zsh`          | `~/.oh-my-zsh/custom/*.zsh`                 |
+| `git/.gitconfig`                      | `~/.gitconfig`                              |
+| `ssh/config`                          | `~/.ssh/config`                             |
+| `claude/CLAUDE.md`                    | `~/.claude/CLAUDE.md`                       |
+| `claude/settings.json`                | `~/.claude/settings.json`                   |
+| `claude/commands/*.md`                | `~/.claude/commands/*.md`                   |
+
+### Oh-my-zsh Configuration
+
+Current setup (from `.zshrc`):
+- **Theme**: robbyrussell
+- **Plugins**: git, rails, ruby, python
+
+Custom themes, plugins, and scripts can be added to `zsh/oh-my-zsh-custom/`. See the [oh-my-zsh customization guide](zsh/oh-my-zsh-custom/README.md).
 
 ### Claude Slash Commands
 

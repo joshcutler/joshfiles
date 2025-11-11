@@ -70,6 +70,34 @@ if [ -f "$DOTFILES_DIR/zsh/.zprofile" ]; then
     create_symlink "$DOTFILES_DIR/zsh/.zprofile" "$HOME/.zprofile"
 fi
 
+# Install oh-my-zsh custom configuration
+if [ -d "$DOTFILES_DIR/zsh/oh-my-zsh-custom" ]; then
+    if [ -d "$HOME/.oh-my-zsh" ]; then
+        # Symlink custom themes, plugins, and scripts
+        if [ -d "$DOTFILES_DIR/zsh/oh-my-zsh-custom/themes" ]; then
+            for theme in "$DOTFILES_DIR/zsh/oh-my-zsh-custom/themes"/*.zsh-theme 2>/dev/null; do
+                [ -f "$theme" ] && create_symlink "$theme" "$HOME/.oh-my-zsh/custom/themes/$(basename "$theme")"
+            done
+        fi
+
+        if [ -d "$DOTFILES_DIR/zsh/oh-my-zsh-custom/plugins" ]; then
+            for plugin_dir in "$DOTFILES_DIR/zsh/oh-my-zsh-custom/plugins"/*/ 2>/dev/null; do
+                [ -d "$plugin_dir" ] && create_symlink "$plugin_dir" "$HOME/.oh-my-zsh/custom/plugins/$(basename "$plugin_dir")"
+            done
+        fi
+
+        # Symlink any custom .zsh files
+        for zsh_file in "$DOTFILES_DIR/zsh/oh-my-zsh-custom"/*.zsh 2>/dev/null; do
+            [ -f "$zsh_file" ] && create_symlink "$zsh_file" "$HOME/.oh-my-zsh/custom/$(basename "$zsh_file")"
+        done
+
+        echo -e "${GREEN}Oh-my-zsh customizations linked${NC}"
+    else
+        echo -e "${YELLOW}Warning: Oh-my-zsh not installed. Skipping custom configurations.${NC}"
+        echo -e "${YELLOW}Install with: sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"${NC}"
+    fi
+fi
+
 # Install Git configuration
 if [ -f "$DOTFILES_DIR/git/.gitconfig" ]; then
     create_symlink "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
