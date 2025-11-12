@@ -39,6 +39,7 @@ This repository contains configuration files for:
 │       ├── enhancement.md
 │       ├── feature.md
 │       └── implement.md
+│       └── cleanup.md
 ├── scripts/                # Custom utility scripts
 ├── install.sh              # Installation script
 └── README.md               # This file
@@ -135,7 +136,40 @@ The installation script creates these symlinks:
 
 Current setup (from `.zshrc`):
 - **Theme**: robbyrussell
-- **Plugins**: git, rails, ruby, python
+- **Plugins**: git, rails, ruby, python, command-not-found, extract
+
+**Productivity Plugins (via Homebrew):**
+- **zsh-autosuggestions**: Fish-like autosuggestions based on history
+- **zsh-syntax-highlighting**: Real-time syntax highlighting (green=valid, red=invalid)
+- **zoxide**: Smart directory jumper with fuzzy matching (modern z replacement)
+
+**Plugin Usage:**
+
+**zsh-autosuggestions**
+- As you type, gray text appears suggesting commands from your history
+- Press `→` (right arrow) to accept the full suggestion
+- Press `Ctrl+→` to accept one word at a time
+- Keep typing to ignore the suggestion
+
+**zsh-syntax-highlighting**
+- Commands turn green when valid, red when invalid
+- Helps catch typos before execution
+- Works in real-time as you type
+
+**zoxide**
+- Learns directories you visit frequently (smarter ranking with "frecency")
+- Jump to any directory with: `z <partial-name>`
+- Examples:
+  - `z joshfiles` - jump to ~/code/joshfiles from anywhere
+  - `z josh` - fuzzy match, finds "joshfiles"
+  - `zi` - interactive selection with fzf (if available)
+  - `zi josh` - interactive search for directories matching "josh"
+  - `z -` - jump to previous directory (like `cd -`)
+
+**extract plugin (built-in)**
+- Universal archive extractor for any format
+- Usage: `extract <archive-file>`
+- Supports: .tar.gz, .zip, .tar.bz2, .rar, .7z, and more
 
 Custom themes, plugins, and scripts can be added to `zsh/oh-my-zsh-custom/`. See the [oh-my-zsh customization guide](zsh/oh-my-zsh-custom/README.md).
 

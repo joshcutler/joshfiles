@@ -81,6 +81,15 @@ if command -v asdf &> /dev/null && [ -f "$DOTFILES_DIR/asdf/.tool-versions" ]; t
     echo -e "${GREEN}asdf plugins installed!${NC}"
 fi
 
+# Install fzf shell integrations (keybindings and completions)
+if command -v fzf &> /dev/null && [ ! -f "$HOME/.fzf.zsh" ]; then
+    echo -e "${BLUE}Installing fzf shell integrations...${NC}"
+    $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc --no-bash --no-fish
+    echo -e "${GREEN}fzf shell integrations installed!${NC}"
+elif [ -f "$HOME/.fzf.zsh" ]; then
+    echo -e "${GREEN}fzf shell integrations already installed.${NC}"
+fi
+
 # Run the main dotfiles installation script
 echo ""
 echo -e "${BLUE}Running dotfiles installation...${NC}"
