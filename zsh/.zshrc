@@ -109,3 +109,5 @@ eval "$(pyenv init -)"
 # export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

@@ -72,6 +72,26 @@ Then restart your terminal and install language runtimes:
 asdf install  # Installs ruby 3.1.6 and other versions from .tool-versions
 ```
 
+### Configure Terminal Font for Icons
+
+The modern CLI tools (eza) use icons that require a Nerd Font. After installation:
+
+**For iTerm2:**
+1. Open iTerm2 Preferences (⌘,)
+2. Go to **Profiles** → **Text**
+3. Click the **Font** dropdown
+4. Search for "Hack Nerd Font Mono" and select it
+5. Recommended size: 12-14pt
+6. Restart iTerm2 or open a new window
+
+**For Terminal.app:**
+1. Open Terminal Preferences (⌘,)
+2. Go to **Profiles** → **Font**
+3. Click "Change..." button
+4. Search for "Hack Nerd Font Mono" and select it
+5. Recommended size: 12-14pt
+6. Set as default profile if desired
+
 ### Manual Installation (Dotfiles Only)
 
 If you already have Homebrew and other tools installed:

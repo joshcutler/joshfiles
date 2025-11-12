@@ -29,8 +29,18 @@ brew "watch"
 brew "yarn"
 # UNIX shell (command interpreter)
 brew "zsh"
+# Modern CLI tools
+brew "bat"          # Better cat with syntax highlighting
+brew "eza"          # Better ls with colors and icons
+brew "fd"           # Better find - fast and user-friendly
+brew "ripgrep"      # Better grep - extremely fast search
+brew "fzf"          # Fuzzy finder for files, history, commands
+brew "tldr"         # Simplified man pages
+brew "tree"         # Directory visualization
 # Terminal-based AI coding assistant
 cask "claude-code"
+# Nerd Font with icons for terminal (required for eza icons)
+cask "font-hack-nerd-font"
 vscode "bierner.markdown-mermaid"
 vscode "bierner.markdown-preview-github-styles"
 vscode "bung87.rails"
