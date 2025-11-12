@@ -45,8 +45,8 @@ ff() {
   find . -type f -iname "*$1*"
 }
 
-# Find directories by name
-fd() {
+# Find directories by name (renamed from fd to avoid conflict with modern fd tool)
+fdir() {
   find . -type d -iname "*$1*"
 }
 
