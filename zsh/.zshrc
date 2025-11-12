@@ -70,7 +70,15 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git rails ruby python)
+plugins=(
+  git
+  rails
+  ruby
+  python
+  # Productivity plugins (built-in)
+  command-not-found
+  extract
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -109,5 +117,3 @@ eval "$(pyenv init -)"
 # export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

@@ -29,6 +29,10 @@ brew "watch"
 brew "yarn"
 # UNIX shell (command interpreter)
 brew "zsh"
+# Zsh productivity plugins
+brew "zsh-autosuggestions"      # Fish-like autosuggestions for zsh
+brew "zsh-syntax-highlighting"  # Syntax highlighting for zsh
+brew "zoxide"                   # Smart directory jumper (modern z replacement)
 # Modern CLI tools
 brew "bat"          # Better cat with syntax highlighting
 brew "eza"          # Better ls with colors and icons
