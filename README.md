@@ -173,6 +173,87 @@ Current setup (from `.zshrc`):
 
 Custom themes, plugins, and scripts can be added to `zsh/oh-my-zsh-custom/`. See the [oh-my-zsh customization guide](zsh/oh-my-zsh-custom/README.md).
 
+### Git Configuration
+
+Comprehensive git configuration with extensive aliases, beautiful output, and quality-of-life improvements.
+
+**Features:**
+- **Extensive aliases** for common operations (reduces typing by 70%+)
+- **Beautiful colored output** for status, diff, log, and branches
+- **git-delta** for enhanced diffs with syntax highlighting and side-by-side view
+- **Smart defaults**: auto-prune, auto-setup remote branches, diff3 merge conflicts
+- **Global gitignore** to exclude OS and IDE files across all repositories
+- **Auto-correction** for typos (0.1 second delay)
+
+**Most Useful Aliases:**
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `git st` | `status -sb` | Compact status with branch info |
+| `git lg` | Pretty log graph | Beautiful colored commit history |
+| `git aliases` | List all aliases | Show all available shortcuts |
+| `git aa` | `add --all` | Stage all changes |
+| `git cm "msg"` | `commit -m` | Quick commit with message |
+| `git can` | `commit --amend --no-edit` | Amend without changing message |
+| `git pf` | `push --force-with-lease` | Safer force push |
+| `git d` | `diff` | Show changes (with delta) |
+| `git ds` | `diff --staged` | Show staged changes |
+| `git save` | Add all + commit "SAVEPOINT" | Quick save work in progress |
+| `git wip` | Add all + commit "WIP" | Mark as work in progress |
+| `git undo` | `reset --soft HEAD^` | Undo last commit, keep changes |
+| `git unstage` | `reset HEAD --` | Unstage files |
+| `git clean-branches` | Delete merged branches | Clean up local branches |
+
+**Common Workflows:**
+
+Quick save and continue:
+```bash
+git save          # Save all changes with "SAVEPOINT" message
+# ... switch to urgent work ...
+git undo          # Undo savepoint commit, changes still staged
+```
+
+Beautiful log visualization:
+```bash
+git lg            # Graph log for current branch
+git lga           # Graph log for all branches
+git last          # Show details of last commit
+```
+
+Interactive staging:
+```bash
+git ap            # Stage changes in interactive chunks
+```
+
+Safe force push:
+```bash
+git pf            # Push with --force-with-lease (safer than -f)
+```
+
+Branch cleanup:
+```bash
+git clean-branches  # Remove all merged branches (keeps main/master/develop)
+```
+
+**Global Gitignore:**
+
+The following files are automatically ignored across all repositories:
+- macOS: `.DS_Store`, `._*`, `.Spotlight-V100`
+- IDEs: `.vscode/`, `.idea/`, `*.swp`
+- Environment: `.env`, `.env.local`, `.envrc`
+- Logs: `*.log`
+- Build outputs: `dist/`, `build/`, `*.pyc`, `__pycache__/`
+
+**Delta Configuration:**
+
+Git-delta provides enhanced diffs with:
+- Syntax highlighting for code changes
+- Side-by-side view option
+- Line numbers
+- Better change detection
+
+View all aliases with: `git aliases`
+
 ### Homebrew Package Management
 
 The `Brewfile` works like a `Gemfile` for system packages. Current setup includes:

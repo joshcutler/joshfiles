@@ -41,6 +41,7 @@ brew "ripgrep"      # Better grep - extremely fast search
 brew "fzf"          # Fuzzy finder for files, history, commands
 brew "tldr"         # Simplified man pages
 brew "tree"         # Directory visualization
+brew "git-delta"    # Better git diffs with syntax highlighting
 # Terminal-based AI coding assistant
 cask "claude-code"
 # Nerd Font with icons for terminal (required for eza icons)
