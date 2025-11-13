@@ -1,8 +1,172 @@
+[user]
+	name = Josh Cutler
+	email = josh@cutl3r.com
+
+[core]
+	editor = code --wait
+	autocrlf = input
+	excludesfile = ~/.gitignore_global
+	pager = delta
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = false  # Merge (default)
+
+[push]
+	default = current
+	autoSetupRemote = true  # Auto-create remote branch on first push
+
+[fetch]
+	prune = true  # Auto-remove deleted remote branches
+
+[branch]
+	autoSetupMerge = true
+
+[color]
+	ui = auto
+	branch = auto
+	diff = auto
+	status = auto
+
+[color "branch"]
+	current = yellow bold
+	local = green bold
+	remote = cyan bold
+
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+
+[color "status"]
+	added = green bold
+	changed = yellow bold
+	untracked = red bold
+
+[diff]
+	colorMoved = default
+	algorithm = histogram
+
+[merge]
+	conflictstyle = diff3  # Show common ancestor in conflicts
+
+[rerere]
+	enabled = true  # Remember how you resolved conflicts
+
+[help]
+	autocorrect = 1  # Auto-correct typos after 0.1 second
+
+# Git aliases - Common operations
+[alias]
+	# Status and info
+	st = status -sb
+	s = status
+
+	# Add
+	a = add
+	aa = add --all
+	ap = add --patch  # Interactive staging
+
+	# Commit
+	c = commit
+	cm = commit -m
+	ca = commit --amend
+	can = commit --amend --no-edit
+
+	# Checkout and branches
+	co = checkout
+	cob = checkout -b
+	br = branch
+	bra = branch -a  # Show all branches
+	brd = branch -d  # Delete branch
+	brD = branch -D  # Force delete branch
+
+	# Pull and push
+	p = push
+	pf = push --force-with-lease  # Safer force push
+	pl = pull
+	plo = pull origin
+	plu = pull upstream
+
+	# Fetch
+	f = fetch
+	fa = fetch --all
+
+	# Rebase
+	rb = rebase
+	rbi = rebase -i
+	rbc = rebase --continue
+	rba = rebase --abort
+
+	# Merge
+	m = merge
+	ma = merge --abort
+
+	# Diff
+	d = diff
+	ds = diff --staged
+	dw = diff --word-diff
+
+	# Log
+	l = log --oneline --graph --decorate
+	ll = log --oneline --graph --decorate --all
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	lga = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
+	last = log -1 HEAD --stat
+
+	# Stash
+	sh = stash
+	shp = stash pop
+	shl = stash list
+	sha = stash apply
+	shd = stash drop
+
+	# Reset
+	unstage = reset HEAD --
+	undo = reset --soft HEAD^
+
+	# Show
+	show-files = show --pretty="" --name-only
+
+	# Utilities
+	aliases = config --get-regexp alias  # List all aliases
+	contributors = shortlog --summary --numbered
+	ignore = update-index --assume-unchanged
+	unignore = update-index --no-assume-unchanged
+	ignored = !git ls-files -v | grep "^[[:lower:]]"
+
+	# Working with remotes
+	remotes = remote -v
+
+	# Clean up
+	clean-branches = !git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d
+
+	# Show current branch
+	current-branch = rev-parse --abbrev-ref HEAD
+
+	# Quick save (when you need to save work quickly)
+	save = !git add -A && git commit -m 'SAVEPOINT'
+	wip = !git add -A && git commit -m 'WIP'
+
+	# Undo last commit but keep changes
+	undo-commit = reset --soft HEAD~1
+
+# Delta configuration (brew install git-delta)
+[delta]
+	navigate = true
+	light = false
+	line-numbers = true
+	side-by-side = true
+
+[interactive]
+	diffFilter = delta --color-only
+
 [filter "lfs"]
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
-[user]
-	name = Josh Cutler
-	email = josh@cutl3r.com
