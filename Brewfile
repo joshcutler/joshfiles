@@ -42,10 +42,14 @@ brew "fzf"          # Fuzzy finder for files, history, commands
 brew "tldr"         # Simplified man pages
 brew "tree"         # Directory visualization
 brew "git-delta"    # Better git diffs with syntax highlighting
+# Development tools
+brew "direnv"       # Load environment variables per project
+brew "shellcheck"   # Shell script linting
 # Terminal-based AI coding assistant
 cask "claude-code"
 # Nerd Font with icons for terminal (required for eza icons)
 cask "font-hack-nerd-font"
+vscode "editorconfig.editorconfig"
 vscode "bierner.markdown-mermaid"
 vscode "bierner.markdown-preview-github-styles"
 vscode "bung87.rails"

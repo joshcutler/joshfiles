@@ -127,6 +127,20 @@ if [ -f "$DOTFILES_DIR/asdf/.asdfrc" ]; then
     create_symlink "$DOTFILES_DIR/asdf/.asdfrc" "$HOME/.asdfrc"
 fi
 
+# Install asdf default packages
+if [ -f "$DOTFILES_DIR/asdf/.default-gems" ]; then
+    create_symlink "$DOTFILES_DIR/asdf/.default-gems" "$HOME/.default-gems"
+fi
+
+if [ -f "$DOTFILES_DIR/asdf/.default-npm-packages" ]; then
+    create_symlink "$DOTFILES_DIR/asdf/.default-npm-packages" "$HOME/.default-npm-packages"
+fi
+
+# Install EditorConfig
+if [ -f "$DOTFILES_DIR/.editorconfig" ]; then
+    create_symlink "$DOTFILES_DIR/.editorconfig" "$HOME/.editorconfig"
+fi
+
 # Install Claude configuration
 if [ -d "$DOTFILES_DIR/claude" ]; then
     # Create .claude directory if it doesn't exist

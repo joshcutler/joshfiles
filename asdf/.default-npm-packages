@@ -1,0 +1,26 @@
+# Packages to install with every Node version via asdf/nvm
+
+# Package managers
+yarn
+pnpm
+
+# Development tools
+typescript
+ts-node
+@types/node
+
+# Linting and formatting
+eslint
+prettier
+
+# Build tools
+webpack
+vite
+
+# Testing
+jest
+
+# Utilities
+nodemon
+dotenv-cli
+npm-check-updates
