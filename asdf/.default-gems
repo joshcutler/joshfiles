@@ -1,0 +1,20 @@
+# Gems to install with every Ruby version via asdf/rbenv
+
+# Essential development tools
+bundler
+rake
+
+# Code quality
+rubocop
+rubocop-rails
+rubocop-rspec
+
+# Testing
+rspec
+
+# Debugging
+pry
+pry-byebug
+
+# Rails development
+rails
