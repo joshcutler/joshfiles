@@ -26,9 +26,8 @@ If there are uncommitted changes, inform the user and ask if they want to:
 If no PR exists:
 1. Follow the standard PR creation process from the commit creation instructions:
    - Analyze the git diff and commit history
-   - Draft a comprehensive PR description with Summary and Test plan sections
+   - Draft a PR description with summary of the work.  Can be concise as we are auto-closing
    - Create the PR with `gh pr create`
-   - Include the standard Claude Code footer
 
 If PR already exists:
 - Display the existing PR URL

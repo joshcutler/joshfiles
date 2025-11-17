@@ -10,11 +10,15 @@ You are helping the user create a focused GitHub issue for a small enhancement o
 
 ### Step 1: Understand the Enhancement
 1. Acknowledge the user's enhancement idea
-2. **Quickly examine the codebase** to:
-   - Find the affected code/files
-   - Understand existing patterns
-   - Identify what needs to change
-3. Summarize what you found
+2. **Quickly examine the codebase** by delegating to appropriate specialized agent:
+   - Use the Task tool with the appropriate `subagent_type`:
+     - `rails-architect` for broad pattern analysis
+     - `rails-models` for database/model changes
+     - `rails-controllers` for controller/routing changes
+     - `rails-frontend` for UI/UX improvements
+   - Provide the agent with context about the enhancement
+   - Agent will find the affected code/files, understand existing patterns, and identify what needs to change
+3. Summarize what the agent found
 
 ### Step 2: Ask Clarifying Questions (1-2 Rounds Max)
 Use **AskUserQuestion** tool to gather key details. Keep it to **4-6 questions total** across 1-2 rounds.
@@ -92,22 +96,33 @@ Then provide:
 - Issue URL
 - Brief summary
 
+## Available Specialized Agents
+
+Use these exact `subagent_type` values with the Task tool when examining the codebase:
+- `rails-architect` - For broad pattern analysis and quick architectural review
+- `rails-models` - For database and model examination
+- `rails-controllers` - For controller and routing analysis
+- `rails-frontend` - For UI/UX and view analysis
+- `rails-qa` - For understanding test coverage
+- `rails-security-performance` - For security and performance considerations
+
 ## Important Guidelines
 
 ✅ **DO:**
+- **Delegate codebase examination** to specialized agents (choose the most relevant one)
 - Keep it focused and actionable
-- Quickly examine relevant code
 - Ask only essential questions (4-6 total)
-- Reference specific files and patterns
+- Reference specific files and patterns (found by agents)
 - Make implementation clear and straightforward
 - Focus on incremental improvements
 
 ❌ **DON'T:**
+- Use Grep/Glob directly - delegate to agents instead
 - Turn this into a full `/feature` process
 - Ask too many rounds of questions
 - Over-complicate small changes
 - Create massive enhancement specs
-- Forget to check existing code patterns
+- Skip codebase examination
 
 ## Enhancements vs Features vs Bugs
 
