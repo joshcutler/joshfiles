@@ -620,7 +620,83 @@ test "user name" do
 end
 ```
 
-### 3. Mocking with Mocha
+### 3. FactoryBot (Alternative to Fixtures)
+
+Some codebases use FactoryBot instead of or alongside fixtures. When a codebase uses FactoryBot:
+
+**Check for FactoryBot**:
+- Look for `test/factories/` directory
+- Check `test/test_helper.rb` for `include FactoryBot::Syntax::Methods`
+- Look for `factory_bot_rails` in Gemfile
+
+**Basic Usage**:
+```ruby
+# Build (in memory, not saved)
+user = build(:user)
+
+# Create (saved to database)
+user = create(:user)
+
+# Build with attributes
+user = build(:user, admin: true)
+
+# Use traits
+card = create(:card, :commander, :red)
+
+# Create associations automatically
+deck = create(:deck, :with_commander)
+
+# Override specific attributes
+card = create(:card, name: "Custom Card", current_price: 100.0)
+```
+
+**Example Factory Definition** (`test/factories/cards.rb`):
+```ruby
+FactoryBot.define do
+  factory :card do
+    sequence(:name) { |n| "Test Card #{n}" }
+    sequence(:number) { |n| n.to_s }
+    association :card_set
+    rarity { "common" }
+
+    trait :commander do
+      legendary
+      commander_eligible { true }
+    end
+
+    trait :red do
+      # Set color identity in meta
+    end
+
+    trait :with_price do
+      transient do
+        price { 5.00 }
+      end
+      current_price { price }
+    end
+  end
+end
+```
+
+**Migration Strategy (Fixtures → Factories):**
+- **Prefer factories for all new tests** - improves isolation and maintainability
+- **Migrate existing tests gradually** - update tests to use factories as you touch them
+- **Fixtures coexist during transition** - both approaches work together
+- **Goal**: Eventually remove `fixtures :all` in favor of explicit, isolated test data
+
+**Best Practices**:
+```ruby
+# Good - explicit, self-documenting
+user = create(:user)
+card = create(:card, :commander, :red)
+deck = create(:deck, user: user, commander_1: card)
+
+# Avoid - relies on implicit fixture knowledge
+user = users(:one)
+deck = decks(:valid_red_deck)
+```
+
+### 4. Mocking with Mocha
 
 **Expectations**:
 ```ruby

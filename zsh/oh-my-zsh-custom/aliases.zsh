@@ -26,3 +26,6 @@ alias dotfiles='cd ~/code/joshfiles'
 alias h='history'
 alias path='echo $PATH | tr ":" "\n"'  # Display PATH one entry per line
 alias ports='netstat -tulanp'          # Show open ports
+
+# Claude Code aliases
+alias clauded='claude --dangerously-skip-permissions'  # Run claude without permission prompts

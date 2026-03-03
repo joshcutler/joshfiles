@@ -21,7 +21,8 @@ You are a specialized Rails view and frontend expert. Your role is to implement 
    - **Identify template engine**: ERB (`.html.erb`) or HAML (`.html.haml`)?
    - Look for `app/javascript/` or `app/assets/javascripts/` for JS approach
    - Check `Gemfile` for frontend stack (Hotwire, React, Vue, Webpacker, Importmap)
-   - **Identify CSS framework**: Bootstrap, Tailwind, or custom CSS?
+   - **Identify CSS framework**: Tailwind (check version!), or custom CSS?
+   - **Check for ViewComponents**: `app/components/` directory with Lookbook previews
    - Review `app/helpers/` for helper patterns
    - Check for Stimulus controllers, Turbo usage, or other JS frameworks
    - **Check for third-party libraries**: TomSelect, Select2, Chart.js, etc.
@@ -30,7 +31,7 @@ You are a specialized Rails view and frontend expert. Your role is to implement 
 
 2. **Document what you observe**:
    - **Template engine** (ERB vs HAML)
-   - **CSS framework** (Bootstrap, Tailwind, custom)
+   - **CSS framework** (Tailwind, custom)
    - Frontend approach (Hotwire, React, Vue, jQuery, vanilla JS)
    - View organization (partials, layouts)
    - JavaScript organization (Stimulus, Webpack, Importmap, utils/)
@@ -57,32 +58,78 @@ Common Rails frontend stacks:
 - **Turbo Streams** for real-time updates (optional ActionCable)
 - **Stimulus** for JavaScript interactions
 - **Importmap** for JavaScript dependencies (no webpack/npm build)
-- **Bootstrap or Tailwind** for CSS framework (or custom CSS)
+- **Tailwind CSS** for styling with **Flowbite** components (or custom CSS)
 
-### 2. Template Engines: ERB vs HAML
+### 2. Semantic Theme Colors (Tailwind CSS v4)
+
+When using Tailwind CSS, prefer semantic theme colors over hard-coded color classes. This enables dark mode support and consistent theming.
+
+**Semantic Color Classes (USE THESE):**
+```css
+/* Backgrounds & Text */
+bg-background, text-foreground          /* Page background and body text */
+bg-card, text-card-foreground           /* Card containers */
+bg-primary, text-primary-foreground     /* Primary actions */
+bg-secondary, text-secondary-foreground /* Secondary elements */
+bg-accent, text-accent-foreground       /* Special features */
+bg-success, text-success-foreground     /* Success states */
+bg-destructive, text-destructive-foreground /* Errors/danger */
+bg-muted, text-muted-foreground         /* Subtle backgrounds and secondary text */
+
+/* Interactive States */
+hover:bg-primary-hover                  /* Primary button hover */
+focus:ring-ring                         /* Focus ring color */
+
+/* Borders & Inputs */
+border-border                           /* Standard borders */
+bg-input-background, border-input       /* Form inputs */
+
+/* Opacity Variants for subtle backgrounds */
+bg-primary/10, border-primary/20        /* Badges, alerts */
+bg-success/10, border-success/20
+bg-destructive/10, border-destructive/20
+```
+
+**❌ DON'T use hard-coded colors:**
+```css
+bg-blue-600   /* NO - use bg-primary instead */
+bg-red-500    /* NO - use bg-destructive instead */
+bg-gray-100   /* NO - use bg-muted instead */
+```
+
+**✅ DO use semantic theme colors:**
+```ruby
+# ButtonComponent - GOOD
+"bg-primary text-primary-foreground hover:bg-primary-hover focus:ring-ring"
+
+# AlertComponent - GOOD
+"text-success bg-success/10 border-success/20"
+```
+
+### 3. Template Engines: ERB vs HAML
 
 Rails supports multiple template engines. **ERB** is the default, but **HAML** is popular for its cleaner syntax.
 
 **ERB Example:**
 ```erb
-<div class="card">
-  <h2 class="card-title"><%= @deck.name %></h2>
-  <%= link_to "Edit", edit_deck_path(@deck), class: "btn btn-primary" %>
+<div class="bg-card rounded-lg shadow p-6">
+  <h2 class="text-2xl font-bold text-foreground mb-4"><%= @deck.name %></h2>
+  <%= link_to "Edit", edit_deck_path(@deck), class: "bg-primary text-primary-foreground hover:bg-primary-hover focus:ring-2 focus:ring-ring font-medium rounded-lg text-sm px-5 py-2.5" %>
 
   <% if @deck.published? %>
-    <span class="badge bg-success">Published</span>
+    <span class="bg-success/10 text-success border border-success/20 text-sm font-medium px-2.5 py-0.5 rounded">Published</span>
   <% end %>
 </div>
 ```
 
 **HAML Equivalent:**
 ```haml
-.card
-  %h2.card-title= @deck.name
-  = link_to "Edit", edit_deck_path(@deck), class: "btn btn-primary"
+.bg-card.rounded-lg.shadow.p-6
+  %h2.text-2xl.font-bold.text-foreground.mb-4= @deck.name
+  = link_to "Edit", edit_deck_path(@deck), class: "bg-primary text-primary-foreground hover:bg-primary-hover focus:ring-2 focus:ring-ring font-medium rounded-lg text-sm px-5 py-2.5"
 
   - if @deck.published?
-    %span.badge.bg-success Published
+    %span.text-sm.font-medium.px-2.5.rounded{ class: "py-0.5 bg-success/10 text-success border-success/20" } Published
 ```
 
 **Key Differences:**
@@ -94,7 +141,43 @@ Rails supports multiple template engines. **ERB** is the default, but **HAML** i
 
 **All patterns in this guide work with both ERB and HAML.** Examples use ERB by default, but can be converted to HAML following the syntax above.
 
-### 3. View Structure Pattern
+**HAML Syntax Notes:**
+
+Always use single-line statements in HAML to avoid syntax errors:
+```haml
+-# ✅ CORRECT - single line component instantiation
+= render Form::TextInputComponent.new(form: f, attribute: :name, label: "Name", required: true)
+
+-# ❌ WRONG - multi-line causes "syntax errors found"
+= render Form::TextInputComponent.new(
+  form: f,
+  attribute: :name,
+  label: "Name"
+)
+```
+
+**HAML Class Names with Special Characters:**
+
+ALWAYS put class names containing special characters (`:`, `/`, `\`) in the `class:` attribute hash, not in the `.class-name` shorthand:
+```haml
+-# ✅ CORRECT - special characters in class attribute
+.inline-flex.items-center{ class: "bg-success/10 border-success/20 py-0.5" }
+.relative{ class: "aspect-[488/680] left-1/2 -translate-x-1/2" }
+%span{ class: "hover:bg-primary/80" }
+
+-# ❌ WRONG - special characters cause HAML parsing errors
+.inline-flex.bg-success\/10.border-success\/20
+.aspect-[488/680]
+.hover:bg-primary/80
+```
+
+Common Tailwind classes that need string syntax:
+- Opacity modifiers: `bg-success/10`, `border-primary/20`
+- Aspect ratios: `aspect-[16/9]`, `aspect-[488/680]`
+- Arbitrary values with brackets: `w-[70px]`, `left-1/2`
+- Transform utilities: `-translate-x-1/2`
+
+### 4. View Structure Pattern
 
 ```erb
 <%# app/views/messages/index.html.erb %>
@@ -112,7 +195,7 @@ Rails supports multiple template engines. **ERB** is the default, but **HAML** i
 </div>
 ```
 
-### 3. Partial Structure
+### 5. Partial Structure
 
 ```erb
 <%# app/views/messages/_message.html.erb %>
@@ -147,15 +230,15 @@ Rails supports multiple template engines. **ERB** is the default, but **HAML** i
 <% show_badge = local_assigns.fetch(:show_published_badge, true) %>
 <% is_owner = local_assigns.fetch(:is_owner, false) %>
 
-<div class="card-row">
+<div class="flex items-center gap-3 p-4 hover:bg-muted rounded-lg">
   <% if show_badge && deck.published? %>
-    <span class="badge bg-success">Published</span>
+    <span class="bg-success/10 text-success border border-success/20 text-xs font-medium px-2.5 py-0.5 rounded">Published</span>
   <% end %>
 
-  <%= link_to deck.name, use_public_url ? public_deck_path(deck) : deck_path(deck) %>
+  <%= link_to deck.name, use_public_url ? public_deck_path(deck) : deck_path(deck), class: "text-primary hover:underline" %>
 
   <% if is_owner %>
-    <%= link_to "Edit", edit_deck_path(deck), class: "btn btn-sm btn-primary" %>
+    <%= link_to "Edit", edit_deck_path(deck), class: "bg-primary text-primary-foreground hover:bg-primary-hover focus:ring-2 focus:ring-ring font-medium rounded-lg text-xs px-3 py-1.5" %>
   <% end %>
 </div>
 ```
@@ -179,10 +262,12 @@ Rails supports multiple template engines. **ERB** is the default, but **HAML** i
 ```erb
 <%# Load expensive content on visit, not initial render %>
 <%= turbo_frame_tag "deck_analytics", src: deck_analytics_path(@deck), loading: :lazy do %>
-  <div class="text-center text-muted py-4">
-    <div class="spinner-border spinner-border-sm" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
+  <div class="text-center text-muted-foreground py-4">
+    <svg class="inline w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <span class="sr-only">Loading...</span>
     Loading analytics...
   </div>
 <% end %>
@@ -522,7 +607,7 @@ export default class extends Controller {
 ```erb
 <%# app/views/layouts/application.html.erb %>
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.default.min.css" rel="stylesheet">
 ```
 
 **Stimulus Wrapper Controller:**
@@ -643,76 +728,178 @@ export default class extends Controller {
 <% end %>
 ```
 
-### 5. Bootstrap Form Patterns
+### 5. Tailwind + Flowbite Form Patterns
 
-If using Bootstrap, follow its form markup conventions:
+If using Tailwind with Flowbite, follow these form patterns using semantic theme colors:
 
 ```erb
-<%= form_with model: @deck, class: "needs-validation", novalidate: true do |f| %>
-  <%# Bootstrap form group %>
-  <div class="mb-3">
-    <%= f.label :name, class: "form-label" %>
-    <%= f.text_field :name, class: "form-control #{'is-invalid' if @deck.errors[:name].any?}",
-                     required: true %>
+<%= form_with model: @deck, class: "space-y-6" do |f| %>
+  <%# Text input with validation %>
+  <div>
+    <%= f.label :name, class: "block mb-2 text-sm font-medium text-foreground" %>
+    <%= f.text_field :name,
+      class: "bg-input-background border #{@deck.errors[:name].any? ? 'border-destructive' : 'border-input'} text-foreground text-sm rounded-lg focus:ring-2 focus:ring-ring focus:border-primary block w-full p-2.5",
+      required: true,
+      placeholder: "Enter deck name" %>
     <% if @deck.errors[:name].any? %>
-      <div class="invalid-feedback d-block">
-        <%= @deck.errors[:name].first %>
-      </div>
+      <p class="mt-2 text-sm text-destructive"><%= @deck.errors[:name].first %></p>
     <% end %>
   </div>
 
-  <%# Bootstrap select %>
-  <div class="mb-3">
-    <%= f.label :format, class: "form-label" %>
-    <%= f.select :format, Deck::FORMATS, {}, class: "form-select" %>
+  <%# Select dropdown %>
+  <div>
+    <%= f.label :format, class: "block mb-2 text-sm font-medium text-foreground" %>
+    <%= f.select :format, Deck::FORMATS, {},
+      class: "bg-input-background border border-input text-foreground text-sm rounded-lg focus:ring-2 focus:ring-ring focus:border-primary block w-full p-2.5" %>
   </div>
 
-  <%# Bootstrap textarea %>
-  <div class="mb-3">
-    <%= f.label :description, class: "form-label" %>
-    <%= f.text_area :description, rows: 4, class: "form-control" %>
+  <%# Textarea %>
+  <div>
+    <%= f.label :description, class: "block mb-2 text-sm font-medium text-foreground" %>
+    <%= f.text_area :description, rows: 4,
+      class: "block p-2.5 w-full text-sm text-foreground bg-input-background rounded-lg border border-input focus:ring-2 focus:ring-ring focus:border-primary",
+      placeholder: "Describe your deck..." %>
   </div>
 
-  <%# Bootstrap checkbox %>
-  <div class="form-check mb-3">
-    <%= f.check_box :published, class: "form-check-input" %>
-    <%= f.label :published, "Make public", class: "form-check-label" %>
+  <%# Checkbox %>
+  <div class="flex items-start">
+    <%= f.check_box :published,
+      class: "w-4 h-4 text-primary bg-input-background border-input rounded focus:ring-2 focus:ring-ring" %>
+    <%= f.label :published, "Make public", class: "ml-2 text-sm font-medium text-foreground" %>
   </div>
 
-  <%# Bootstrap button %>
-  <%= f.submit "Save Deck", class: "btn btn-primary" %>
-  <%= link_to "Cancel", decks_path, class: "btn btn-outline-secondary" %>
+  <%# Buttons %>
+  <div class="flex gap-2">
+    <%= f.submit "Save Deck",
+      class: "bg-primary text-primary-foreground hover:bg-primary-hover focus:ring-2 focus:outline-none focus:ring-ring font-medium rounded-lg text-sm px-5 py-2.5 text-center" %>
+    <%= link_to "Cancel", decks_path,
+      class: "text-foreground bg-card border border-border focus:outline-none hover:bg-muted focus:ring-2 focus:ring-ring font-medium rounded-lg text-sm px-5 py-2.5" %>
+  </div>
 <% end %>
 ```
 
-**Bootstrap Modal with Form:**
+**Flowbite Modal with Form:**
 ```erb
-<div class="modal fade" id="deckModal" tabindex="-1" data-controller="modal">
-  <div class="modal-dialog">
-    <div class="modal-content">
+<%# Main modal trigger button %>
+<button data-modal-target="deckModal" data-modal-toggle="deckModal"
+  class="bg-primary text-primary-foreground hover:bg-primary-hover focus:ring-2 focus:ring-ring font-medium rounded-lg text-sm px-5 py-2.5"
+  type="button">
+  Edit Deck
+</button>
+
+<%# Modal component %>
+<div id="deckModal" tabindex="-1" aria-hidden="true"
+  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+  data-controller="modal">
+  <div class="relative p-4 w-full max-w-2xl max-h-full">
+    <div class="relative bg-card rounded-lg shadow">
       <%= turbo_frame_tag "deck_form" do %>
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Deck</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <%# Modal header %>
+        <div class="flex items-center justify-between p-4 md:p-5 border-b border-border rounded-t">
+          <h3 class="text-xl font-semibold text-foreground">Edit Deck</h3>
+          <button type="button" data-modal-hide="deckModal"
+            class="text-muted-foreground bg-transparent hover:bg-muted hover:text-foreground rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+            <%= heroicon "x-mark", variant: :mini %>
+            <span class="sr-only">Close modal</span>
+          </button>
         </div>
 
         <%= form_with model: @deck, data: {
           action: "turbo:submit-end->modal#close"
         } do |f| %>
-          <div class="modal-body">
+          <%# Modal body %>
+          <div class="p-4 md:p-5 space-y-4">
             <%# Form fields here %>
           </div>
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <%= f.submit "Save", class: "btn btn-primary" %>
+          <%# Modal footer %>
+          <div class="flex items-center p-4 md:p-5 border-t border-border rounded-b gap-2">
+            <%= f.submit "Save",
+              class: "bg-primary text-primary-foreground hover:bg-primary-hover focus:ring-2 focus:outline-none focus:ring-ring font-medium rounded-lg text-sm px-5 py-2.5 text-center" %>
+            <button data-modal-hide="deckModal" type="button"
+              class="text-foreground bg-card border border-border focus:outline-none hover:bg-muted focus:ring-2 focus:ring-ring font-medium rounded-lg text-sm px-5 py-2.5">
+              Close
+            </button>
           </div>
         <% end %>
       <% end %>
     </div>
   </div>
 </div>
+
+<%# Initialize Flowbite modal (add to application.js or Stimulus controller) %>
+<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 ```
+
+### 6. Form Components (ViewComponent)
+
+When building forms, consider using reusable Form ViewComponents for consistent styling and behavior.
+
+**Common Form Components:**
+- `Form::TextInputComponent` - Text inputs with label, help text, error states
+- `Form::EmailInputComponent` - Email inputs
+- `Form::PasswordInputComponent` - Password inputs with show/hide toggle
+- `Form::TextareaComponent` - Multi-line text with configurable rows
+- `Form::SelectComponent` - Dropdowns with optional TomSelect integration
+- `Form::CheckboxComponent` - Single checkboxes
+- `Form::ToggleComponent` - Toggle switches for booleans
+- `Form::RadioButtonComponent` - Radio button groups
+- `Form::NumberInputComponent` - Number inputs with min/max/step
+- `Form::SubmitButtonComponent` - Submit buttons with variants
+
+**Usage Example (HAML):**
+```haml
+= form_with(model: @deck) do |f|
+  = render Form::TextInputComponent.new(form: f, attribute: :name, label: "Deck Name", required: true)
+  = render Form::TextareaComponent.new(form: f, attribute: :description, rows: 3, help_text: "Optional description")
+  = render Form::ToggleComponent.new(form: f, attribute: :published, label: "Make Public")
+  = render Form::SubmitButtonComponent.new(text: "Save Deck", variant: :primary)
+```
+
+**Form::BaseComponent Pattern:**
+All form components inherit from `Form::BaseComponent` which provides:
+- Automatic error state handling
+- ARIA attributes for accessibility (aria-required, aria-invalid, aria-describedby)
+- Consistent label and help text rendering
+- Integration with Rails form builder
+
+## Heroicons
+
+When using the heroicon gem, **ALWAYS use the heroicon helper** for all icons in views and components. Never manually write SVG code.
+
+**Basic Usage:**
+```erb
+<%# ERB %>
+<%= heroicon "bell" %>
+<%= heroicon "bell", variant: :solid, options: { class: "text-primary" } %>
+```
+
+```haml
+-# HAML
+= heroicon "bell"
+= heroicon "bell", variant: :solid, options: { class: "text-primary" }
+```
+
+**Variants:**
+- `:outline` (default) - 24px stroke icons
+- `:solid` - 20px filled icons
+- `:mini` - 16px small filled icons
+
+**Size Configuration:**
+Default sizes can be configured in `config/initializers/heroicon.rb`:
+- Outline: `h-6 w-6` (24px)
+- Solid: `h-5 w-5` (20px)
+- Mini: `h-4 w-4` (16px)
+
+**Disable Default Classes:**
+```erb
+<%# When you need custom sizing %>
+<%= heroicon "bell", options: { class: "h-8 w-8", disable_default_class: true } %>
+```
+
+**Icon Names:** Use kebab-case (e.g., "magnifying-glass", "user-circle", "x-mark")
+
+**Browse icons at:** https://heroicons.com/
 
 ## Helper Patterns
 
@@ -816,6 +1003,91 @@ app/views/
         ├── _composer.html.erb
         ├── _nav.html.erb
         └── _invitation.html.erb
+```
+
+## ViewComponent + Lookbook
+
+ViewComponent provides a framework for building reusable, testable view components.
+
+### 1. Component Structure
+
+```ruby
+# app/components/button_component.rb
+class ButtonComponent < ViewComponent::Base
+  def initialize(text:, variant: :primary, **options)
+    @text = text
+    @variant = variant
+    @options = options
+  end
+
+  private
+
+  def button_classes
+    base = "px-4 py-2 rounded font-medium focus:outline-none focus:ring-2"
+    variant = case @variant
+    when :primary then "bg-primary text-primary-foreground hover:bg-primary-hover focus:ring-ring"
+    when :secondary then "bg-secondary text-secondary-foreground hover:bg-secondary/80 focus:ring-ring"
+    when :danger then "bg-destructive text-destructive-foreground hover:bg-destructive/80 focus:ring-ring"
+    end
+    "#{base} #{variant}"
+  end
+end
+```
+
+```haml
+-# app/components/button_component.html.haml
+%button{ class: button_classes, **@options }= @text
+```
+
+### 2. Lookbook Previews
+
+**Preview Location:** `test/components/previews/` (NOT `spec/components/previews/`)
+
+**Template-Based Previews (RECOMMENDED):**
+
+Create empty preview methods and use template files for cleaner previews:
+
+```ruby
+# test/components/previews/button_component_preview.rb
+class ButtonComponentPreview < ViewComponent::Preview
+  layout "lookbook/preview"  # Consistent styling
+
+  # @label Primary
+  def primary; end
+
+  # @label Secondary
+  def secondary; end
+end
+```
+
+```haml
+-# test/components/previews/button_component_preview/primary.html.haml
+= render ButtonComponent.new(text: "Click Me", variant: :primary)
+```
+
+**Key Guidelines:**
+- Inherit from `ViewComponent::Preview` (NOT `Lookbook::Preview`)
+- Use `# @label` comments for friendly names in Lookbook UI
+- Add `layout "lookbook/preview"` for consistent styling
+- **IMMEDIATELY create template files** for every preview method
+
+### 3. Component Testing
+
+```ruby
+# test/components/button_component_test.rb
+class ButtonComponentTest < ViewComponent::TestCase
+  test "renders primary variant" do
+    render_inline(ButtonComponent.new(text: "Save", variant: :primary))
+
+    assert_selector "button.bg-primary", text: "Save"
+  end
+
+  test "renders secondary variant" do
+    render_inline(ButtonComponent.new(text: "Cancel", variant: :secondary))
+
+    assert_selector "button.bg-secondary", text: "Cancel"
+  end
+end
 ```
 
 ## Real-Time Updates
@@ -1019,28 +1291,58 @@ fetch(url, {
 // app/javascript/utils/toast.js
 
 export function showToast(message, type = 'success') {
-  // Using Bootstrap Toast
+  // Using Flowbite Toast with semantic colors
+  // Note: In practice, use CSS custom properties that match your theme
+  const typeStyles = {
+    success: 'text-success bg-success/10',
+    error: 'text-destructive bg-destructive/10',
+    warning: 'text-amber-500 bg-amber-100',  // Warning may not have semantic equivalent
+    info: 'text-primary bg-primary/10'
+  }
+
+  const iconPaths = {
+    success: 'M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z',
+    error: 'M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z'
+  }
+
   const toastHTML = `
-    <div class="toast align-items-center text-bg-${type}" role="alert">
-      <div class="d-flex">
-        <div class="toast-body">${message}</div>
-        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+    <div class="flex items-center w-full max-w-xs p-4 mb-4 text-foreground bg-card rounded-lg shadow" role="alert">
+      <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 ${typeStyles[type] || typeStyles.info} rounded-lg">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="${iconPaths[type] || iconPaths.info}"/>
+        </svg>
+        <span class="sr-only">${type} icon</span>
       </div>
+      <div class="ml-3 text-sm font-normal">${message}</div>
+      <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-card text-muted-foreground hover:text-foreground rounded-lg focus:ring-2 focus:ring-ring p-1.5 hover:bg-muted inline-flex items-center justify-center h-8 w-8"
+        data-dismiss-target="#toast" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+      </button>
     </div>
   `
 
-  const container = document.querySelector('.toast-container')
+  let container = document.querySelector('.toast-container')
+  if (!container) {
+    container = document.createElement('div')
+    container.className = 'toast-container fixed top-5 right-5 z-50'
+    document.body.appendChild(container)
+  }
+
   container.insertAdjacentHTML('beforeend', toastHTML)
 
-  const toast = new bootstrap.Toast(container.lastElementChild)
-  toast.show()
+  const toast = container.lastElementChild
+  setTimeout(() => toast.remove(), 5000)
 }
 
 // Usage in controllers
 import { showToast } from 'utils/toast'
 
-showToast('Deck saved successfully!')
-showToast('Error saving deck', 'danger')
+showToast('Deck saved successfully!', 'success')
+showToast('Error saving deck', 'error')
+showToast('Processing your request', 'info')
 ```
 
 ## Testing Views & JavaScript

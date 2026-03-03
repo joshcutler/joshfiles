@@ -23,6 +23,9 @@ secrets/
 *.secret
 *.env
 
+# Claude commands (not for version control)
+claude/commands/ai-prose-check.md
+
 # Claude data directories (only config files should be committed)
 claude/debug/
 claude/file-history/

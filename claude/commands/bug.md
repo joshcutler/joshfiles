@@ -1,102 +1,49 @@
 ---
-description: Create a GitHub issue for a bug report
+description: Create a GitHub issue for a bug report (auto-detects Rails or iOS)
 ---
 
-# Create Bug Issue - Quick Process
+# Create Bug Issue - Smart Dispatcher
 
-You are helping the user create a concise GitHub issue for a bug. Keep this process **short and focused**.
+This command automatically detects your project type and delegates to the appropriate platform-specific workflow.
 
-## Process
+## Step 1: Detect Project Type
 
-### Step 1: Understand the Bug
-1. Acknowledge what the user reported
-2. **Optionally investigate the bug** by delegating to a specialized agent:
-   - Use the Task tool with the appropriate `subagent_type` if the bug location is unclear:
-     - `rails-architect` for broad system issues
-     - `rails-models` for database/model bugs
-     - `rails-controllers` for controller/routing bugs
-     - `rails-frontend` for UI/view bugs
-   - This is optional - only do this if it helps understand the bug better
-   - Don't spend too long on investigation for simple bugs
+Check for project indicators in the current directory:
 
-### Step 2: Ask 1-2 Quick Questions
-Use **AskUserQuestion** to gather essential details. Keep it to **1-2 questions max**.
+**Rails indicators:**
+- `Gemfile` with Rails gem
+- `config/routes.rb`
+- `app/controllers/` directory
 
-Example questions:
-- What are the steps to reproduce this bug?
-- What did you expect to happen vs what actually happened?
-- Is this consistently reproducible or intermittent?
-- What page/feature is affected?
+**iOS indicators:**
+- `*.xcodeproj` or `*.xcworkspace`
+- `Package.swift`
 
-### Step 3: Create the GitHub Issue
+## Step 2: Delegate to Platform-Specific Workflow
 
-Use this **minimal structure**:
+Based on detection:
 
-```markdown
-## Bug Description
+### If Rails project detected:
+Tell the user: "Detected **Rails** project. Running `/bug-rails` workflow."
 
-[Clear description of what's wrong]
+Then follow the `/bug-rails` workflow:
+- Understand the bug (optionally delegate to `rails-*` agents)
+- Ask 1-2 quick questions
+- Create GitHub issue with bug label
 
-## Steps to Reproduce
+### If iOS project detected:
+Tell the user: "Detected **iOS** project. Running `/bug-ios` workflow."
 
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
+Then follow the `/bug-ios` workflow:
+- Understand the bug (optionally use Glob/Grep to investigate)
+- Ask 1-2 quick questions (include device/iOS version)
+- Create GitHub issue with bug label
 
-## Expected Behavior
-
-[What should happen]
-
-## Actual Behavior
-
-[What actually happens]
-
-## Additional Context
-
-[Any relevant details: browser, error messages, screenshots, affected pages, etc.]
-```
-
-### Step 4: Create Issue with Bug Label
-
-Use `gh issue create` with the bug label:
-
-```bash
-gh issue create --title "Bug: [Clear Title]" --label bug --body "$(cat <<'EOF'
-[Full markdown content from above]
-EOF
-)"
-```
-
-Then provide:
-- Issue number
-- Issue URL
-
-## Available Specialized Agents (Optional)
-
-Use these exact `subagent_type` values with the Task tool if you need to investigate the bug:
-- `rails-architect` - For broad system issues and architectural problems
-- `rails-models` - For database and model bugs
-- `rails-controllers` - For controller and routing bugs
-- `rails-frontend` - For UI and view bugs
-- `rails-qa` - For test failures or testing issues
-- `rails-security-performance` - For security vulnerabilities or performance bugs
-
-## Important Guidelines
-
-✅ **DO:**
-- Keep it short and focused
-- Get straight to the point
-- Create actionable bug reports
-- Use the minimal template structure
-- **Optionally delegate** bug investigation to agents if the location is unclear
-
-❌ **DON'T:**
-- Over-engineer the process
-- Ask too many questions
-- Spend too long investigating (agents can help keep it quick)
-- Make it as complex as /feature
-- Use Grep/Glob directly - use agents if you need to investigate
+### If ambiguous or neither detected:
+Use **AskUserQuestion** to ask:
+- "I couldn't auto-detect the project type. Which platform is this project?"
+- Options: "Rails", "iOS", "Other"
 
 ---
 
-**Remember:** This should be FAST. Get the key info (steps to reproduce, expected vs actual) and create the issue. Users can add more details in comments if needed.
+Detect the project type now and begin the appropriate workflow.
