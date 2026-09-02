@@ -3,7 +3,7 @@
 You are turning a Tiding work-stub (or a new idea) into a full spec that
 `/implement-tiding` can execute without re-litigating anything. Tiding is the
 multi-tenant platform growing out of magpie; its issues live in
-`joshcutler/tiding` (platform epics E1–E8 and their children) with mini-side
+`WithMagpie/tiding` (platform epics E1–E8 and their children) with mini-side
 issues M1–M4 in `joshcutler/magpie`. Stubs are labeled **`needs-spec`**;
 removing that label is the *output* of this command, never a tidying action.
 
@@ -30,7 +30,7 @@ Read, in order (the first two live in the magpie repo —
    architecture. §3 (doctrine), §7 (contracts), §8 (capability APIs), §9
    (safety properties) are load-bearing for almost every issue.
 2. `docs/PRINCIPLES.md` — the four principles and their incidents.
-3. The issue's **parent epic** in `joshcutler/tiding` — it carries capability
+3. The issue's **parent epic** in `WithMagpie/tiding` — it carries capability
    statements the child must re-answer in detail.
 4. `CONTRIBUTING.md` in the tiding repo — the lifecycle and standing invariants.
 5. The current state of the owning repo (`tiding-server` / `tiding-runtime` /
@@ -95,8 +95,8 @@ Structure (drop sections that genuinely do not apply; never pad):
 Then:
 
 ```bash
-gh issue edit <N> --repo joshcutler/tiding --body-file <spec> \
-  && gh issue edit <N> --repo joshcutler/tiding --remove-label needs-spec
+gh issue edit <N> --repo WithMagpie/tiding --body-file <spec> \
+  && gh issue edit <N> --repo WithMagpie/tiding --remove-label needs-spec
 ```
 
 (Or `--repo joshcutler/magpie` for M-issues — those additionally keep the full

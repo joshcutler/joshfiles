@@ -1,13 +1,13 @@
 # Implement a Tiding Issue
 
-You are implementing an issue for the Tiding platform (`joshcutler/tiding`
+You are implementing an issue for the Tiding platform (`WithMagpie/tiding`
 epics/children; `tiding-server`, `tiding-runtime`, `tiding-ios` for code;
 M-issues in `joshcutler/magpie` use `/implement-magpie` instead — its container
 and vault guardrails apply there and not here).
 
 ## Phase 0: The gate
 
-1. `gh issue view <N> --repo joshcutler/tiding` — body, labels, comments.
+1. `gh issue view <N> --repo WithMagpie/tiding` — body, labels, comments.
 2. **If the issue carries `needs-spec`: halt.** Tell the user to run
    `/feature-tiding <N>` first. Do not spec-and-implement in one motion — the
    interview is the user's control point, and collapsing the two removes it.
