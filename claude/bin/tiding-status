@@ -1,0 +1,75 @@
+#!/bin/bash
+# Set a Tiding project item's Status field.
+#
+#   tiding-status <issue-number> <status> [-R owner/repo]
+#
+# Default repo is WithMagpie/tiding; pass -R joshcutler/magpie for the
+# mini-side (M) issues, which live in the magpie repo but share the board.
+#
+# The status vocabulary is read from the project itself, never hardcoded here:
+# an unknown status is an error naming the valid ones, and an issue that is not
+# on the board is an error too. "Could not find it" and "set it" must not
+# collapse into the same silent success.
+#
+# Requires: gh with the `project` scope (gh auth refresh -h github.com -s project).
+set -euo pipefail
+
+PROJECT_OWNER="WithMagpie"
+PROJECT_NUMBER=1
+REPO="WithMagpie/tiding"
+
+usage() { sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; exit 2; }
+
+[ $# -ge 2 ] || usage
+NUM="$1"; STATUS="$2"; shift 2
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -R|--repo) REPO="${2:?-R needs owner/repo}"; shift 2;;
+    -h|--help) usage;;
+    *) echo "unknown argument: $1" >&2; usage;;
+  esac
+done
+case "$NUM" in ''|*[!0-9]*) echo "issue number must be numeric, got: $NUM" >&2; exit 2;; esac
+OWNER="${REPO%%/*}"; NAME="${REPO##*/}"
+
+read -r PROJECT_ID FIELD_ID <<<"$(gh api graphql \
+  -f query='query($o:String!,$n:Int!){organization(login:$o){projectV2(number:$n){
+      id field(name:"Status"){... on ProjectV2SingleSelectField{id}}}}}' \
+  -F o="$PROJECT_OWNER" -F n="$PROJECT_NUMBER" \
+  --jq '.data.organization.projectV2 | "\(.id) \(.field.id)"')"
+
+OPTION_ID="$(TIDING_STATUS="$STATUS" gh api graphql \
+  -f query='query($f:ID!){node(id:$f){... on ProjectV2SingleSelectField{options{id name}}}}' \
+  -F f="$FIELD_ID" \
+  --jq '.data.node.options[] | select(.name == env.TIDING_STATUS) | .id')"
+if [ -z "$OPTION_ID" ]; then
+  echo "unknown status: $STATUS" >&2
+  echo -n "valid: " >&2
+  gh api graphql -f query='query($f:ID!){node(id:$f){... on ProjectV2SingleSelectField{options{name}}}}' \
+    -F f="$FIELD_ID" --jq '[.data.node.options[].name] | join(", ")' >&2
+  exit 1
+fi
+
+# Look the item up from the PROJECT side, not the issue side. An issue only
+# reports `projectItems` for projects owned by its own org/user, so the four
+# mini-side magpie issues sitting on this WithMagpie board report none at all —
+# the issue-side query silently finds nothing and reads exactly like "not on the
+# board". Measured, not assumed: the board lists them while the issue says 0.
+ITEM_ID="$(TIDING_REPO="$REPO" TIDING_NUM="$NUM" gh api graphql \
+  -f query='query($o:String!,$n:Int!){organization(login:$o){projectV2(number:$n){
+      items(first:100){nodes{id content{... on Issue{number repository{nameWithOwner}}}}}}}}' \
+  -F o="$PROJECT_OWNER" -F n="$PROJECT_NUMBER" \
+  --jq '.data.organization.projectV2.items.nodes[]
+        | select(.content.repository.nameWithOwner == env.TIDING_REPO
+                 and (.content.number | tostring) == env.TIDING_NUM) | .id')"
+if [ -z "$ITEM_ID" ]; then
+  echo "$REPO#$NUM is not on the $PROJECT_OWNER/$PROJECT_NUMBER board — add it first, then re-run." >&2
+  exit 1
+fi
+
+gh api graphql -f query='mutation($p:ID!,$i:ID!,$f:ID!,$o:String!){
+    updateProjectV2ItemFieldValue(input:{projectId:$p,itemId:$i,fieldId:$f,
+      value:{singleSelectOptionId:$o}}){projectV2Item{id}}}' \
+  -F p="$PROJECT_ID" -F i="$ITEM_ID" -F f="$FIELD_ID" -F o="$OPTION_ID" >/dev/null
+
+echo "$REPO#$NUM → $STATUS"

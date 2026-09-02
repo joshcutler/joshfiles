@@ -7,6 +7,15 @@ multi-tenant platform growing out of magpie; its issues live in
 issues M1–M4 in `joshcutler/magpie`. Stubs are labeled **`needs-spec`**;
 removing that label is the *output* of this command, never a tidying action.
 
+**Epics are sub-issue parents, not a title convention.** Every work issue is a
+native GitHub sub-issue of its epic — that link is what puts it on the
+[board](https://github.com/orgs/WithMagpie/projects/1). **New titles carry no
+`E5.3:` prefix**; the parent says which epic it belongs to. If this command is
+given a *new idea* rather than an existing issue, file it first per the filing
+procedure in the tiding repo's `CONTRIBUTING.md` — `gh issue create` with
+`--label needs-spec`, then `addSubIssue` under its epic — and confirm the number
+with the user before interviewing.
+
 The failure mode this exists to prevent is magpie's: specs that say what a
 component should *do* and nothing about what it must do when it **cannot look**.
 
@@ -30,8 +39,11 @@ Read, in order (the first two live in the magpie repo —
    architecture. §3 (doctrine), §7 (contracts), §8 (capability APIs), §9
    (safety properties) are load-bearing for almost every issue.
 2. `docs/PRINCIPLES.md` — the four principles and their incidents.
-3. The issue's **parent epic** in `WithMagpie/tiding` — it carries capability
-   statements the child must re-answer in detail.
+3. The issue's **parent epic** — read it from the sub-issue link, not the title
+   (`gh issue view <N> --repo WithMagpie/tiding --json parent`). It carries
+   capability statements the child must re-answer in detail. An issue with **no
+   parent** is a finding: say so and ask which epic it belongs under before
+   interviewing, rather than speccing an orphan.
 4. `CONTRIBUTING.md` in the tiding repo — the lifecycle and standing invariants.
 5. The current state of the owning repo (`tiding-server` / `tiding-runtime` /
    `tiding-ios`), if it exists yet — a spec against imagined code is stale on
@@ -96,11 +108,20 @@ Then:
 
 ```bash
 gh issue edit <N> --repo WithMagpie/tiding --body-file <spec> \
-  && gh issue edit <N> --repo WithMagpie/tiding --remove-label needs-spec
+  && gh issue edit <N> --repo WithMagpie/tiding --remove-label needs-spec \
+  && ~/code/joshfiles/claude/bin/tiding-status <N> Specced
 ```
 
-(Or `--repo joshcutler/magpie` for M-issues — those additionally keep the full
-magpie Principles Conformance format, which `/implement-magpie` gates on.)
+(Or `--repo joshcutler/magpie` and `tiding-status <N> Specced -R joshcutler/magpie`
+for M-issues — those additionally keep the full magpie Principles Conformance
+format, which `/implement-magpie` gates on.)
 
-Confirm to the user: issue number, what was decided, and that `needs-spec` is
-off — which is the signal `/implement-tiding` accepts it.
+**The label is the gate; the board is the view.** Removing `needs-spec` is what
+`/implement-tiding` reads. The `tiding-status` call only keeps the board honest,
+and it is chained after the label edit deliberately: if it fails, the gate has
+still moved correctly and the board is merely stale. Never do the reverse — a
+board move without the label change is a lie the commands cannot see.
+
+Confirm to the user: issue number, what was decided, that `needs-spec` is off —
+which is the signal `/implement-tiding` accepts it — and that the board reads
+Specced.

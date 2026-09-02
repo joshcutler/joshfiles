@@ -17,7 +17,8 @@ and vault guardrails apply there and not here).
    name what is missing, offer once to draft it into the issue with
    `gh issue edit` for approval, and do not proceed on answers that live only
    in this conversation. `n/a` with a reason passes.
-4. Read the parent epic and the architecture spec sections the issue cites
+4. Read the parent epic — from the sub-issue link (`--json parent`), not a title
+   prefix — and the architecture spec sections the issue cites
    (`~/code/magpie/docs/superpowers/specs/2026-09-02-tiding-architecture-design.md`).
    The spec's decisions are commitments; an implementation that violates one is
    a finding to raise, not a detail to absorb.
@@ -26,6 +27,13 @@ and vault guardrails apply there and not here).
 
 Ask via **AskUserQuestion** whether to branch; default
 `feat/<brief-description>` off the owning repo's main.
+
+Once branched, move the board: `~/code/joshfiles/claude/bin/tiding-status <N>
+"In Progress"` (add `-R joshcutler/magpie` for an M-issue). The remaining moves
+are automatic — the project's *Pull request linked* workflow sets `In Review`
+when the PR opens and *Item closed* sets `Done` when the merge closes the issue,
+so do not set those by hand. The board never gates anything; the `needs-spec`
+label does. A failed status call is worth one line in your summary, not a halt.
 
 ## Phase 2: Implementation constraints
 
