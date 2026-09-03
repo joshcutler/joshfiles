@@ -1,9 +1,12 @@
 # Implement a Tiding Issue
 
 You are implementing an issue for the Tiding platform (`WithMagpie/tiding`
-epics/children; `tiding-server`, `tiding-runtime`, `tiding-ios` for code;
-M-issues in `joshcutler/magpie` use `/implement-magpie` instead — its container
-and vault guardrails apply there and not here).
+epics/children; `tiding-server`, `tiding-runtime`, `tiding-ios` for code).
+
+**Standing assumptions (2026-09-03 owner decisions):** Tiding is SaaS;
+runtimes are operator-run inside the platform trust boundary (no BYO hosts);
+capability access is per-delivery tokens, never standing (tiding#36); no
+parity target exists — anything contradicting these is stale, and a finding.
 
 ## Phase 0: The gate
 
@@ -13,14 +16,14 @@ and vault guardrails apply there and not here).
    interview is the user's control point, and collapsing the two removes it.
 3. **Read the Conformance section** (per the tiding repo's `CONTRIBUTING.md`):
    §1 capability removal, §2 interagent, §3 blast radius, §4 schema strength.
-   An absent or blank answer halts, exactly like `/implement-magpie` Phase 0.5:
+   An absent or blank answer halts:
    name what is missing, offer once to draft it into the issue with
    `gh issue edit` for approval, and do not proceed on answers that live only
    in this conversation. `n/a` with a reason passes.
 4. Read the parent epic — from the sub-issue link (`--json parent`), not a title
-   prefix — and the architecture spec sections the issue cites
-   (`~/code/magpie/docs/superpowers/specs/2026-09-02-tiding-architecture-design.md`).
-   The spec's decisions are commitments; an implementation that violates one is
+   prefix — and the architecture sections the issue cites
+   (`docs/ARCHITECTURE.md` in the tiding repo — `~/code/tiding` on this
+   machine). The doc's decisions are commitments; an implementation that violates one is
    a finding to raise, not a detail to absorb.
 
 ## Phase 1: Branch
@@ -29,7 +32,7 @@ Ask via **AskUserQuestion** whether to branch; default
 `feat/<brief-description>` off the owning repo's main.
 
 Once branched, move the board: `~/code/joshfiles/claude/bin/tiding-status <N>
-"In Progress"` (add `-R joshcutler/magpie` for an M-issue). The remaining moves
+"In Progress"`. The remaining moves
 are automatic — the project's *Pull request linked* workflow sets `In Review`
 when the PR opens and *Item closed* sets `Done` when the merge closes the issue,
 so do not set those by hand. The board never gates anything; the `needs-spec`
@@ -64,8 +67,9 @@ label does. A failed status call is worth one line in your summary, not a halt.
   own config — and the banned-call lint that asserts this stays green.
 - Tools exist only through the typed registry; the registry's allowlist test
   changes visibly when a tool is added.
-- The engines (week-check / family-agenda day model) are imported, never
-  edited here. A needed engine change is a magpie-repo issue.
+- The engines (the day-model libraries vendored under `engines/`) change
+  only via an issue that names the day-model behaviour being changed — never
+  as a side effect of loop or tooling work.
 
 **`tiding-ios` (Swift):**
 - Staleness states are first-class UI states: `generated_at` + last-sync
@@ -90,10 +94,9 @@ Unit tests are not the thing that ships:
   whichever the issue's layer means.
 - Force the failure paths from the spec's safety properties at least once for
   real (revoked token, dead host, missing report) — green tests on the happy
-  path are not evidence the distinction survives the wire. This is magpie's
-  most expensive lesson, inherited deliberately.
-- If the issue touches parity-relevant behaviour, note the E8 checklist line
-  it affects.
+  path are not evidence the distinction survives the wire.
+- If the issue touches launch-critical behaviour, note the E8 verification
+  checklist line it affects.
 
 ## Phase 5: The standing requirement
 

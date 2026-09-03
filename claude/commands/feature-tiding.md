@@ -1,10 +1,10 @@
 # Spec a Tiding Issue
 
 You are turning a Tiding work-stub (or a new idea) into a full spec that
-`/implement-tiding` can execute without re-litigating anything. Tiding is the
-multi-tenant platform growing out of magpie; its issues live in
-`WithMagpie/tiding` (platform epics E1–E8 and their children) with mini-side
-issues M1–M4 in `joshcutler/magpie`. Stubs are labeled **`needs-spec`**;
+`/implement-tiding` can execute without re-litigating anything. Tiding is a
+commercial SaaS household-agent platform; its issues live in
+`WithMagpie/tiding` (platform epics E1–E8 and their children). Stubs are
+labeled **`needs-spec`**;
 removing that label is the *output* of this command, never a tidying action.
 
 **Epics are sub-issue parents, not a title convention.** Every work issue is a
@@ -16,8 +16,15 @@ procedure in the tiding repo's `CONTRIBUTING.md` — `gh issue create` with
 `--label needs-spec`, then `addSubIssue` under its epic — and confirm the number
 with the user before interviewing.
 
-The failure mode this exists to prevent is magpie's: specs that say what a
+The founding failure mode this exists to prevent: specs that say what a
 component should *do* and nothing about what it must do when it **cannot look**.
+
+**Standing assumptions (2026-09-03 owner decisions — an interview answer or
+epic line contradicting them is stale, and that is a finding):** Tiding is
+SaaS; every runtime is operator-run inside the platform trust boundary (no
+BYO agent hosts, ever); capability access is per-delivery tokens, never a
+standing credential (tiding#36); there is no parity target or legacy
+comparator — the system is built against its own spec.
 
 ## Hard rules
 
@@ -32,20 +39,20 @@ component should *do* and nothing about what it must do when it **cannot look**.
 
 ## Step 1: Orient
 
-Read, in order (the first two live in the magpie repo —
-`~/code/magpie` on this machine):
+Read, in order:
 
-1. `docs/superpowers/specs/2026-09-02-tiding-architecture-design.md` — the
-   architecture. §3 (doctrine), §7 (contracts), §8 (capability APIs), §9
-   (safety properties) are load-bearing for almost every issue.
-2. `docs/PRINCIPLES.md` — the four principles and their incidents.
-3. The issue's **parent epic** — read it from the sub-issue link, not the title
+1. `docs/ARCHITECTURE.md` in the tiding repo (`~/code/tiding` on this
+   machine) — the source of truth. §3 (doctrine and guard classes), §7
+   (protocol; `tiding-server/contracts/v1/` is normative for shapes), §8
+   (capability APIs), §9 (safety properties) are load-bearing for almost
+   every issue.
+2. The issue's **parent epic** — read it from the sub-issue link, not the title
    (`gh issue view <N> --repo WithMagpie/tiding --json parent`). It carries
    capability statements the child must re-answer in detail. An issue with **no
    parent** is a finding: say so and ask which epic it belongs under before
    interviewing, rather than speccing an orphan.
-4. `CONTRIBUTING.md` in the tiding repo — the lifecycle and standing invariants.
-5. The current state of the owning repo (`tiding-server` / `tiding-runtime` /
+3. `CONTRIBUTING.md` in the tiding repo — the lifecycle and standing invariants.
+4. The current state of the owning repo (`tiding-server` / `tiding-runtime` /
    `tiding-ios`), if it exists yet — a spec against imagined code is stale on
    arrival, which is why stubs are specced just-in-time.
 
@@ -66,8 +73,8 @@ Adapt to the issue; the categories that are never skipped:
 - What is the failure this must never have? Name it concretely.
 
 **Doctrine (the action-space rule):**
-- Does this add a tool, verb, endpoint, or field? Then its §2.1 blast-radius
-  statement is written in the spec, *before* it exists.
+- Does this add a tool, verb, endpoint, or field? Then its blast-radius
+  statement is written in the spec, *before* it exists (ARCHITECTURE §3).
 - Could this reintroduce a generic capability (an open-ended fetch, an
   arbitrary callable, a path argument)? Name what structurally prevents it.
 
@@ -111,10 +118,6 @@ gh issue edit <N> --repo WithMagpie/tiding --body-file <spec> \
   && gh issue edit <N> --repo WithMagpie/tiding --remove-label needs-spec \
   && ~/code/joshfiles/claude/bin/tiding-status <N> Specced
 ```
-
-(Or `--repo joshcutler/magpie` and `tiding-status <N> Specced -R joshcutler/magpie`
-for M-issues — those additionally keep the full magpie Principles Conformance
-format, which `/implement-magpie` gates on.)
 
 **The label is the gate; the board is the view.** Removing `needs-spec` is what
 `/implement-tiding` reads. The `tiding-status` call only keeps the board honest,
