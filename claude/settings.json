@@ -5,9 +5,16 @@
       "Bash(RAILS_ENV=test bin/rails runner:*)"
     ]
   },
+  "model": "opus[1m]",
   "enabledPlugins": {
     "swift-lsp@claude-plugins-official": true,
-    "figma@claude-plugins-official": true
+    "figma@claude-plugins-official": true,
+    "ruby-lsp@claude-plugins-official": true
   },
-  "skipDangerousModePermissionPrompt": true
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
+  "autoCompactEnabled": false,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true
 }
