@@ -20,7 +20,12 @@ parity target exists — anything contradicting these is stale, and a finding.
    name what is missing, offer once to draft it into the issue with
    `gh issue edit` for approval, and do not proceed on answers that live only
    in this conversation. `n/a` with a reason passes.
-4. Read the parent epic — from the sub-issue link (`--json parent`), not a title
+4. **For a `tiding-ios` issue, read the spec's Design section.** An iOS issue
+   with a UI component must link its Claude Design element (owner rule
+   2026-09-04, tiding `CONTRIBUTING.md`); `Design: no UI component` passes.
+   A UI issue with no design link halts the same way a blank conformance
+   answer does — send it back through `/feature-tiding`.
+5. Read the parent epic — from the sub-issue link (`--json parent`), not a title
    prefix — and the architecture sections the issue cites
    (`docs/ARCHITECTURE.md` in the tiding repo — `~/code/tiding` on this
    machine). The doc's decisions are commitments; an implementation that violates one is
@@ -55,6 +60,21 @@ label does. A failed status call is worth one line in your summary, not a halt.
   never decided it, stop and raise it as a spec question (the mid-implementation
   objection flow in the tiding repo's `CONTRIBUTING.md`) — hand-rolling by
   default is not an implementation detail.
+- **Read the library's docs before using it, and cite the URL in the code
+  comment.** Never assert a gem's or framework's behaviour from memory or from
+  "the usual fix" — check the library's own documentation (context7 MCP, then
+  its README and official guides), and put the URL beside the claim so a
+  reviewer checks it instead of trusting it. Where the docs are silent, read
+  the source and label the comment as source-not-docs. Prefer asserting the
+  behaviour in a test over describing it in a paragraph. Measured on tiding#15:
+  a Devise API-mode claim that was exactly backwards, and an invented cache
+  probe that would have broken the first production deploy — see "Read the
+  library's docs; do not infer its API" in the tiding repo's `CONTRIBUTING.md`.
+- **Grep the repo for an existing guard before writing a new one.** A shared
+  concern, a support module, a scope, a matcher. The E3.1 auth surface
+  re-opened a NUL-byte 500 that `WirePayload` had already closed, by building a
+  new controller base that did not include it. Reuse beats rediscovery, and a
+  guard with two call sites is stronger than two guards with one.
 
 **`tiding-server` (Rails):**
 - Every table carries `household_id`; every controller resolves principal →
@@ -83,6 +103,9 @@ label does. A failed status call is worth one line in your summary, not a halt.
   "clear" and "no data", "no report received for <period>" for absence.
 - The client renders closed vocabularies; an unknown enum value is an error
   state, never silently skipped.
+- The implementation matches the spec's linked Claude Design element;
+  divergence is raised as a spec question (the design amends with the spec),
+  never absorbed silently.
 
 ## Phase 3: Tests
 
@@ -115,6 +138,7 @@ should document this".
 ## Phase 6: Summary
 
 Branch, key changes, actual test counts and the command that produced them,
-what was verified against the real surface versus only unit-tested, doc
-deltas or "onboarding unchanged", and next steps. Reference the issue number
-in commits; PRs auto-close their issue.
+what was verified against the real surface versus only unit-tested, **which
+library behaviours were verified against docs (name them, with URLs) versus
+assumed**, doc deltas or "onboarding unchanged", and next steps. Reference the
+issue number in commits; PRs auto-close their issue.

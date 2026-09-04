@@ -107,6 +107,37 @@ Adapt to the issue; the categories that are never skipped:
   inside the trust boundary, whether its behaviour on failure preserves the
   `could_not_check` distinctions. A library that collapses them is a reason
   to reject it, and that reasoning goes in the spec.
+- **Verify the candidate before the spec names it, and record where you
+  looked.** Three checks, none skippable: the gem *exists* at the version the
+  spec will cite (RubyGems, its releases); its **documented** usage fits this
+  app's actual shape — `api_only`, no session middleware, our own token auth,
+  whatever the owning repo already is; and its docs are read, not recalled.
+  Put the doc URL in the issue's Dependencies section beside the pick, and name
+  any documented incompatibility as an edge case rather than leaving it to be
+  discovered mid-implementation. Measured on tiding#15: `devise-webauthn` was
+  real, current, and correctly chosen, but its README documents no API-only
+  usage and its controllers call `skip_forgery_protection`, which
+  `ActionController::API` does not have — so they cannot load in that app at
+  all. The Dependencies section had the gem right and its *fit* unchecked, and
+  the incompatibility surfaced as a broken CI boot during implementation.
+
+**Design — every time the issue works on the iOS app:**
+- Does this issue have a UI component — does it change anything a user sees?
+  If yes, a **corresponding Claude Design element is required** before the
+  spec gate closes (owner rule 2026-09-04; see the tiding repo's
+  `CONTRIBUTING.md`): create or update the design element via Claude Design
+  MCP for the screens/states this issue touches — composed from the existing
+  **Magpie Design System** (components and tokens; extending the system is a
+  deliberate, recorded decision, never an ad-hoc restyle) — and link it in
+  the spec's Design section. The system is the Claude Design project
+  "Magpie Design System" (id `4c6d4589-bba4-4766-a9ba-89da44d27d66`), read
+  via the `DesignSync` tool / `/design-sync` skill; auth is `/design-login`
+  (a plain `/login` token has no Design access). Its `components/intelligence`
+  group and `ui_kits/mobile-app` kit are the starting palette for iOS work. The staleness states render there as visually distinct
+  artboards (`could_not_check` / `nothing_to_report` / no-report-received) —
+  the design is where "visually distinct" is checked before code exists.
+- If no, the spec states `Design: no UI component` explicitly — a missing
+  section is a blank, and a blank is not an answer.
 
 **Staleness and delivery**, where user-visible:
 - What stamps does the client get (`generated_at`, last-sync)? What renders on
@@ -124,8 +155,13 @@ Structure (drop sections that genuinely do not apply; never pad):
 ## Safety properties        — testable assertions in the closed vocabularies
 ## Tenancy                  — principals, token shapes, scoping enforcement
 ## Contract impact          — schemas touched + version note, or "none"
-## Dependencies             — libraries chosen (and the home-roll or
-                              alternatives rejected, with why), or "none new"
+## Design                   — link to the Claude Design element (required for
+                              any iOS issue with a UI component), or
+                              "no UI component" stated explicitly
+## Dependencies             — libraries chosen, each with the doc URL read and
+                              any documented incompatibility with this app's
+                              shape (and the home-roll or alternatives
+                              rejected, with why), or "none new"
 ## Edge cases
 ## Testing plan             — per-repo conventions; safety properties each get a test
 ## Conformance              — §1–§4 per CONTRIBUTING.md; n/a with a reason is

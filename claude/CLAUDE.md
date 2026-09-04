@@ -1,2 +1,6 @@
 - Ensure that when we create a PR that addresses a specific issue it auto-closes that issue on github
 - Don't append 2024 to web queries, we want the most recent results and it is 2025
+- Read the docs before using any library, gem, framework, or API — before writing the code, not after it breaks. Prefer the context7 MCP server for library docs, then the library's own README and official guides.
+- Never assert library behaviour from memory, and never from "the usual fix" — community lore is not documentation, and it is wrong often enough to cost real time.
+- Cite the doc URL in the code comment or the commit message, so the claim can be checked instead of trusted. Better still, assert the behaviour in a test.
+- If the docs genuinely don't cover it, read the library's source — then say that's what you did, so the next reader knows the claim's provenance and that it can change between versions.
