@@ -49,6 +49,12 @@ label does. A failed status call is worth one line in your summary, not a halt.
   rides only in an issue whose spec declares contract impact, with a version
   bump and updated worked examples.
 - No silent defaults: a missing required field is an error, everywhere.
+- **No home-rolling what a robust, well-supported library already does.** The
+  spec's Dependencies section is the decision record. If mid-implementation
+  you find yourself building machinery a mature library covers and the spec
+  never decided it, stop and raise it as a spec question (the mid-implementation
+  objection flow in the tiding repo's `CONTRIBUTING.md`) — hand-rolling by
+  default is not an implementation detail.
 
 **`tiding-server` (Rails):**
 - Every table carries `household_id`; every controller resolves principal →

@@ -88,6 +88,21 @@ Adapt to the issue; the categories that are never skipped:
   vocabularies closed, and stay runtime-identifier-free. A contract change made
   casually inside an unrelated issue is a finding.
 
+**Build vs. buy — whenever the issue would build machinery:**
+- If the natural implementation hand-rolls something a robust, well-supported
+  library already does (scheduling/RRULE parsing, background jobs, state
+  machines, rate limiting, webhooks, retries/idempotency, push delivery,
+  auth flows, …), find the leading candidates first — check real health:
+  maintenance activity, adoption, recent releases — and present them **as
+  AskUserQuestion choices** alongside the home-roll option, with concrete
+  trade-offs. Home-rolling is a decision the user makes with the candidates
+  on the table, never a default reached by omission.
+- A dependency is also surface: the chosen library answers the same doctrine
+  questions as our own code — what capabilities it drags in, its blast radius
+  inside the trust boundary, whether its behaviour on failure preserves the
+  `could_not_check` distinctions. A library that collapses them is a reason
+  to reject it, and that reasoning goes in the spec.
+
 **Staleness and delivery**, where user-visible:
 - What stamps does the client get (`generated_at`, last-sync)? What renders on
   a boring day, and on a failed-to-look day?
@@ -104,6 +119,8 @@ Structure (drop sections that genuinely do not apply; never pad):
 ## Safety properties        — testable assertions in the closed vocabularies
 ## Tenancy                  — principals, token shapes, scoping enforcement
 ## Contract impact          — schemas touched + version note, or "none"
+## Dependencies             — libraries chosen (and the home-roll or
+                              alternatives rejected, with why), or "none new"
 ## Edge cases
 ## Testing plan             — per-repo conventions; safety properties each get a test
 ## Conformance              — §1–§4 per CONTRIBUTING.md; n/a with a reason is
