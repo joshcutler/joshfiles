@@ -19,12 +19,17 @@ with the user before interviewing.
 The founding failure mode this exists to prevent: specs that say what a
 component should *do* and nothing about what it must do when it **cannot look**.
 
-**Standing assumptions (2026-09-03 owner decisions — an interview answer or
-epic line contradicting them is stale, and that is a finding):** Tiding is
+**Standing assumptions (2026-09-03/04 owner decisions — an interview answer
+or epic line contradicting them is stale, and that is a finding):** Tiding is
 SaaS; every runtime is operator-run inside the platform trust boundary (no
 BYO agent hosts, ever); capability access is per-delivery tokens, never a
-standing credential (tiding#36); there is no parity target or legacy
-comparator — the system is built against its own spec.
+standing credential (tiding#36); new capabilities land as `tiding-server`
+APIs — the runtime never gains a third-party client, and a spec placing a
+fetch in the runtime is an ARCHITECTURE amendment that must answer the three
+tests from tiding#18 (credential custody without a database,
+`could_not_check` as a wire state, audit via the request log); there is no
+parity target or legacy comparator — the system is built against its own
+spec.
 
 ## Hard rules
 
