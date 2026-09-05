@@ -127,15 +127,23 @@ Adapt to the issue; the categories that are never skipped:
   spec gate closes (owner rule 2026-09-04; see the tiding repo's
   `CONTRIBUTING.md`): create or update the design element via Claude Design
   MCP for the screens/states this issue touches — composed from the existing
-  **Magpie Design System** (components and tokens; extending the system is a
+  **Plume Design System** (components and tokens; extending the system is a
   deliberate, recorded decision, never an ad-hoc restyle) — and link it in
-  the spec's Design section. The system is the Claude Design project
-  "Magpie Design System" (id `4c6d4589-bba4-4766-a9ba-89da44d27d66`), read
-  via the `DesignSync` tool / `/design-sync` skill; auth is `/design-login`
-  (a plain `/login` token has no Design access). Its `components/intelligence`
-  group and `ui_kits/mobile-app` kit are the starting palette for iOS work. The staleness states render there as visually distinct
-  artboards (`could_not_check` / `nothing_to_report` / no-report-received) —
-  the design is where "visually distinct" is checked before code exists.
+  the spec's Design section. The system is the Claude Design design-system
+  project "Plume Design System" (id `e8a1a95f-eac8-404a-872c-50da1d023756`;
+  it superseded the Magpie Design System `4c6d4589-…` on 2026-09-04 — same
+  component inventory and prop contracts, a warm playful brand, and the
+  category colour + icon system), read via the `DesignSync` tool /
+  `/design-sync` skill; auth is `/design-login` (a plain `/login` token has no
+  Design access). Its `components/intelligence` group, `components/surfaces`
+  (`AgendaItem`, `DayHeader`) and `ui_kits/mobile-app` kit are the starting
+  palette for iOS work; page designs live in the "Magpie iOS" project
+  (`22feed73-…`, rebuilt on Plume). The staleness states render there as
+  visually distinct artboards (`could_not_check` / `nothing_to_report` /
+  no-report-received) — the design is where "visually distinct" is checked
+  before code exists. A DS push must patch `_ds_manifest.json` and
+  `_ds_fallbacks.jsx` in the same motion (tiding `CONTRIBUTING.md`, "Design
+  System pushes go through two compiled artifacts").
 - If no, the spec states `Design: no UI component` explicitly — a missing
   section is a blank, and a blank is not an answer.
 

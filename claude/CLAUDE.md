@@ -4,3 +4,4 @@
 - Never assert library behaviour from memory, and never from "the usual fix" — community lore is not documentation, and it is wrong often enough to cost real time.
 - Cite the doc URL in the code comment or the commit message, so the claim can be checked instead of trusted. Better still, assert the behaviour in a test.
 - If the docs genuinely don't cover it, read the library's source — then say that's what you did, so the next reader knows the claim's provenance and that it can change between versions.
+- Claude Design (claude.ai/design) work: read @~/.claude/claude-design.md first — design-system projects are a distinct, immutable project type; create and push them with the native DesignSync tool, never the raw MCP create_project.
