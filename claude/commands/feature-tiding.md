@@ -41,6 +41,16 @@ spec.
   write and the safety sections are never delegated.
 - The spec lands **in the issue body** via `gh issue edit`, replacing the stub.
   A spec that lives only in conversation does not exist.
+- **Spec the simplest thing that satisfies the issue**, in the framework's own
+  idiom (tiding `CONTRIBUTING.md`, "Simple is the default"). A spec is not
+  improved by adding scope: no configuration knob with one value, no
+  abstraction with one caller, no extension point for a case nobody has asked
+  for. If the interview surfaces a genuinely larger want, that is a separate
+  issue, named as such — not a section quietly added to this one.
+- **Security belongs in a spec when it is real** — an attacker, a reachable
+  path, and what they get. Say that plainly and at length when it applies.
+  Do not pad a spec with hardening that no reachable path calls for; it buries
+  the finding that matters.
 
 ## Step 1: Orient
 
@@ -93,15 +103,17 @@ Adapt to the issue; the categories that are never skipped:
   vocabularies closed, and stay runtime-identifier-free. A contract change made
   casually inside an unrelated issue is a finding.
 
-**Build vs. buy — whenever the issue would build machinery:**
-- If the natural implementation hand-rolls something a robust, well-supported
-  library already does (scheduling/RRULE parsing, background jobs, state
-  machines, rate limiting, webhooks, retries/idempotency, push delivery,
-  auth flows, …), find the leading candidates first — check real health:
-  maintenance activity, adoption, recent releases — and present them **as
-  AskUserQuestion choices** alongside the home-roll option, with concrete
-  trade-offs. Home-rolling is a decision the user makes with the candidates
-  on the table, never a default reached by omission.
+**Build vs. buy — only when the issue would build real machinery:**
+- First ask whether the framework already does it: Rails, the standard
+  library, or a gem the app already carries. If it does, that is the answer,
+  the spec names it in one line, and there is nothing to put to the user.
+- Only when the framework has no answer and the machinery is substantial
+  (scheduling/RRULE parsing, state machines, webauthn, push delivery, …) find
+  the leading candidates — check real health: maintenance activity, adoption,
+  recent releases — and present them **as AskUserQuestion choices** alongside
+  the home-roll option, with concrete trade-offs. A new dependency for a
+  problem twenty lines of ordinary code solves is its own kind of complexity;
+  so is hand-rolling auth.
 - A dependency is also surface: the chosen library answers the same doctrine
   questions as our own code — what capabilities it drags in, its blast radius
   inside the trust boundary, whether its behaviour on failure preserves the
@@ -153,7 +165,9 @@ Adapt to the issue; the categories that are never skipped:
 
 ## Step 3: Write the spec into the issue
 
-Structure (drop sections that genuinely do not apply; never pad):
+Structure (drop sections that genuinely do not apply; never pad). Length is
+proportional to the change: most sections are a few lines, and a section whose
+honest answer is one line stays one line.
 
 ```markdown
 ## Problem statement
@@ -173,7 +187,9 @@ Structure (drop sections that genuinely do not apply; never pad):
 ## Edge cases
 ## Testing plan             — per-repo conventions; safety properties each get a test
 ## Conformance              — §1–§4 per CONTRIBUTING.md; n/a with a reason is
-                              valid, a blank is not
+                              valid, a blank is not; four honest n/a's is a
+                              complete section for a change that adds no verb,
+                              field, endpoint, or credential
 ## Acceptance criteria      — includes "counts reported, not 'tests pass'"
 ```
 

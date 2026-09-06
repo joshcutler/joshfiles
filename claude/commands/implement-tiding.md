@@ -54,12 +54,28 @@ label does. A failed status call is worth one line in your summary, not a halt.
   rides only in an issue whose spec declares contract impact, with a version
   bump and updated worked examples.
 - No silent defaults: a missing required field is an error, everywhere.
-- **No home-rolling what a robust, well-supported library already does.** The
-  spec's Dependencies section is the decision record. If mid-implementation
-  you find yourself building machinery a mature library covers and the spec
-  never decided it, stop and raise it as a spec question (the mid-implementation
-  objection flow in the tiding repo's `CONTRIBUTING.md`) — hand-rolling by
-  default is not an implementation detail.
+- **Build the simplest thing that satisfies the spec, in the framework's own
+  idiom** (tiding `CONTRIBUTING.md`, "Simple is the default"). Plain Active
+  Record over a service object that wraps one call; a generator's output over
+  hand-written boilerplate; SwiftUI's own state over a bespoke store. Nothing
+  the spec did not ask for: no configuration knob with one value, no
+  abstraction with one caller, no extension point for a hypothetical second
+  case, no cache before a measurement asked for one. Scope beyond the spec is
+  raised as a question, not implemented quietly.
+- **Do not invent a guard the spec did not ask for.** A rescue around
+  something that cannot raise, a validation on a field only our own code
+  writes, a boot-time probe of a framework facility — these read as diligence
+  and are how tiding#15 nearly broke its first production deploy. If a guard
+  seems necessary and the spec is silent, raise it; if it is security, name
+  the attacker, the reachable path, and what they get, or leave it out.
+- **No home-rolling what a robust, well-supported library already does** —
+  and no new dependency for what the framework or standard library already
+  does. The spec's Dependencies section is the decision record. If
+  mid-implementation you find yourself building machinery a mature library
+  covers and the spec never decided it, stop and raise it as a spec question
+  (the mid-implementation objection flow in the tiding repo's
+  `CONTRIBUTING.md`) — hand-rolling by default is not an implementation
+  detail, and neither is adding a gem.
 - **Read the library's docs before using it, and cite the URL in the code
   comment.** Never assert a gem's or framework's behaviour from memory or from
   "the usual fix" — check the library's own documentation (context7 MCP, then
