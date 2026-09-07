@@ -2,10 +2,18 @@
   "permissions": {
     "allow": [
       "Bash(RAILS_ENV=development bin/rails runner:*)",
-      "Bash(RAILS_ENV=test bin/rails runner:*)"
+      "Bash(RAILS_ENV=test bin/rails runner:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(gh api -X PUT repos/*/pulls/*/merge:*)"
     ]
   },
-  "model": "opus[1m]",
+  "autoMode": {
+    "allow": [
+      "$defaults",
+      "Merging a pull request the user has asked to merge, with `gh pr merge` (any of --squash/--merge/--rebase, with or without --delete-branch and --admin) or the equivalent `gh api -X PUT repos/OWNER/REPO/pulls/N/merge`. The user has given standing authorization for this and does not want to be asked again, including when the merge triggers a deploy. Deleting the merged branch afterwards, locally or on the remote, is part of the same authorization."
+    ]
+  },
+  "model": "fable",
   "enabledPlugins": {
     "swift-lsp@claude-plugins-official": true,
     "figma@claude-plugins-official": true,
